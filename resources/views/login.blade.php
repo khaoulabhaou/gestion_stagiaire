@@ -87,7 +87,7 @@
         <div class="mb-3">
             <div class="d-flex justify-content-between">
                 <label for="password" class="form-label">Mot de passe</label>
-                <a href="#" class="text-decoration-none mt-1" style="font-size: 12px">Mot de passe oublié ?</a>
+                <a href="{{route('password.request')}}" class="text-decoration-none mt-1" style="font-size: 12px">Mot de passe oublié ?</a>
             </div>
             <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
                    id="password" placeholder="Entrez votre mot de passe">

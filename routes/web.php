@@ -1,13 +1,15 @@
 <?php
 
+use App\Mail\MyTestEmail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController;
-use App\Mail\MyTestEmail;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,9 +18,6 @@ Route::get('/', function () {
 Route::get('/home', function() {
     return view('home');
 });
-
-// Route::post('/register', [UserController::class, 'register'])->name('register');
-// Route::post('/logout', [UserController::class, 'logout']);
 
 Route::get('/login', function(){
     return view('login');
@@ -58,3 +57,15 @@ Route::get('/testroute',function(){
 });
 
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+
+// Route::get('/forgot-password', 'auth.forgot-password')->name('password.request');
+
+//Resetting password
+Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+->name('password.request');
+Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+->name('password.email');
+Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+->name('password.reset');
+Route::post('reset-password', [NewPasswordController::class, 'store'])
+->name('password.store');

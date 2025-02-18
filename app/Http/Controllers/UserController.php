@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller
 {
@@ -47,6 +48,7 @@ class UserController extends Controller
         return redirect('/login');
     }
 
+
     public function register(Request $request)
     {
         try {
@@ -72,19 +74,19 @@ class UserController extends Controller
             $incomingfields['password'] = bcrypt($incomingfields['password']);
             $user = User::create($incomingfields);
     
+            // Fire the Registered event to trigger email verification
+            event(new Registered($user));
+    
             Auth::login($user);
     
-            return redirect('dashboard')->with('success', 'Registration successful!');
-            
+            // Redirect to the email verification page
+            return redirect()->route('verification.notice')->with('success', 'Veuillez vérifier votre adresse e-mail.');
+    
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) { // Integrity constraint violation
                 return back()->withErrors(['email' => 'This email is already registered. Please use a different one.']);
             }
-    
             return back()->withErrors(['error' => 'Something went wrong!']);
         }
-    }
-    
-    
-    
+    }  
 }
