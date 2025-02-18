@@ -21,6 +21,14 @@ Route::get('/home', function() {
 // Route::post('/register', [UserController::class, 'register'])->name('register');
 // Route::post('/logout', [UserController::class, 'logout']);
 
+Route::get('/login', function(){
+    return view('login');
+});
+
+Route::get('/register',function(){
+    return view('register');
+});
+
 Route::post('/logout', function () {
     Auth::logout();
     return redirect('/'); // Redirect to the home page or any other page
@@ -28,15 +36,6 @@ Route::post('/logout', function () {
 
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::post('/register', [UserController::class, 'register'])->name('register');
-
-Route::get('/login', function(){
-    return view('login');
-});
-
-Route::get('/signup',function(){
-    return view('signup');
-});
-
 Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
 Route::get('auth/google/callback', [GoogleAuthController::class,'callbackGoogle']);
 
