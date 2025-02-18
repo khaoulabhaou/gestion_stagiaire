@@ -9,29 +9,42 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function login(Request $request){
-        // Validate the incoming request
+    public function login(Request $request)
+    {
+        // Validate the input fields
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
+        ], [
+            'email.required' => 'Veuillez entrer votre e-mail.',
+            'email.email' => 'Veuillez entrer un e-mail valide.',
+            'password.required' => 'Veuillez entrer votre mot de passe.'
         ]);
     
-        // Attempt to log the user in with the provided email and password
-        if (Auth::attempt($request->only('email', 'password'))) {
-            // Regenerate session after login
-            $request->session()->regenerate();
-            // Redirect to the homepage or a dashboard with a success message
-            return redirect('/')->with('Success', 'Logged in successfully');
+        // Check if the email exists
+        $user = \App\Models\User::where('email', $request->email)->first();
+    
+        if (!$user) {
+            return back()->withErrors(['email' => 'Cet e-mail n\'existe pas.']);
         }
     
-        // Return back with an error message if login fails
-        return back()->withErrors(['loginError' => 'Invalid username or password']);
+        // Check if the password is correct
+        if (!Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
+            return back()->withErrors(['password' => 'Mot de passe incorrect.']);
+        }
+    
+        // Regenerate session for security
+        $request->session()->regenerate();
+    
+        // Redirect to dashboard or home with success message
+        return redirect('dashboard')->with('Success', 'Connexion réussie.');
     }
+    
     
     
     public function logout(){
         Auth::logout();
-        return redirect('/');
+        return redirect('/login');
     }
 
     public function register(Request $request)

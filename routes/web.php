@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GoogleAuthController;
 use App\Mail\MyTestEmail;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -31,13 +30,11 @@ Route::get('/register',function(){
 
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect('/'); // Redirect to the home page or any other page
+    return redirect('/login'); // Redirect to the home page or any other page
 })->name('logout');
 
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::post('/register', [UserController::class, 'register'])->name('register');
-Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
-Route::get('auth/google/callback', [GoogleAuthController::class,'callbackGoogle']);
 
 // Routes for authenticated users
 Route::middleware('auth')->group(function () {

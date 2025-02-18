@@ -70,33 +70,23 @@
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Mot de passe</label>
+                <div class="d-flex justify-content-between">
+                    <label for="password" class="form-label">Mot de passe</label> 
+                    <a href="#" class="text-decoration-none mt-1" style="font-size: 12px">Mot de passe oublié ?</a>
+                </div>
+                
                 <input type="password" name="password" class="form-control" id="password" placeholder="Entrez votre mot de passe">
                 @error('password')
                     <div class="alert alert-danger mt-2">{{ $message }}</div>
                 @enderror
             </div>
-            <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="remember">
                 <label class="form-check-label" for="remember">Se souvenir de moi</label>
-            </div>
-            <div class="d-flex justify-content-between mt-3">
-                <a href="#" class="text-decoration-none">Mot de passe oublié ?</a>
-            </div>
-            <div class="d-flex justify-content-between mt-3">
+            <div class="d-flex justify-content-between">
                 <a href="{{ route('login') }}" class="text-decoration-none already-account">Vous avez déjà un compte ?</a>
                 <button type="submit" class="btn btn-success text-white">S'inscrire</button>
             </div>
         </form>
-           
-        <hr>
-        <div class="text-center">Ou</div>
-        <a href="{{route('google-auth')}}" class="text-decoration-none">
-            <button class="btn btn-danger google-btn w-100 mt-3 text-white">
-                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google Logo">
-                Continuer avec Google
-            </button>
-        </a>
     </div>
     
 </body>

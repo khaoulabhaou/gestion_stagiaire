@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,6 +11,7 @@
         body {
             background-color: #f8f9fa;
         }
+
         .login-container {
             max-width: 400px;
             margin: 100px auto;
@@ -18,10 +20,12 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .logo {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .google-btn {
             background-color: #000;
             color: white;
@@ -32,14 +36,18 @@
             justify-content: center;
             gap: 10px;
         }
+
         .google-btn img {
             width: 20px;
             height: 20px;
         }
-        .forgot-password, .already-account {
+
+        .forgot-password,
+        .already-account {
             text-align: center;
             margin-top: 10px;
         }
+
         .form-check {
             display: flex;
             align-items: center;
@@ -47,44 +55,59 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="login-container">
     <div class="logo">
-        <img style="width: 25%" src='https://i.postimg.cc/yxx2KxX2/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview.png' alt='Logo'/>
+        <img style="width: 25%" src="https://i.postimg.cc/yxx2KxX2/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview.png" alt="Logo" />
     </div>
+
+    <!-- Displaying general login errors in Bootstrap alert -->
+    @if ($errors->has('loginError'))
+        <div class="alert alert-danger text-center">
+            {{ $errors->first('loginError') }}
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
+        <!-- Email Field with Bootstrap Validation -->
         <div class="mb-3">
             <label for="email" class="form-label">E-mail</label>
-            <input type="email" name="email" class="form-control" id="email" placeholder="Entrez votre e-mail">
+            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                   id="email" placeholder="Entrez votre e-mail" value="{{ old('email') }}">
+            @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
+
+        <!-- Password Field with Bootstrap Validation -->
         <div class="mb-3">
-            <label for="password" class="form-label">Mot de passe</label>
-            <input type="password" name="password" class="form-control" id="password" placeholder="Entrez votre mot de passe">
+            <div class="d-flex justify-content-between">
+                <label for="password" class="form-label">Mot de passe</label>
+                <a href="#" class="text-decoration-none mt-1" style="font-size: 12px">Mot de passe oublié ?</a>
+            </div>
+            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                   id="password" placeholder="Entrez votre mot de passe">
+            @error('password')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
+
+        <!-- Remember Me Checkbox -->
         <div class="form-check">
             <input type="checkbox" name="remember" class="form-check-input" id="remember">
             <label class="form-check-label" for="remember">Se souvenir de moi</label>
         </div>
-        <div class="mt-4">
-            <a href="#" class="text-decoration-none">Mot de passe oublié ?</a>
-        </div>
-        <div>
-            <div class="d-flex justify-content-between mt-3">
-                <a href="{{ route('register') }}" class="text-decoration-none already-account">Vous n'avez pas de compte ?</a>
-                <button type="submit" class="btn btn-success text-white">Se connecter</button>
+
+        <!-- Submit Button & Register Link -->
+        <div class="d-flex justify-content-between mt-3">
+            <a href="{{ route('register') }}" class="text-decoration-none already-account">Vous n'avez pas de compte ?</a>
+            <button type="submit" class="btn btn-success text-white">Se connecter</button>
         </div>
     </form>
-    <hr>
-    <div class="text-center">Ou</div>
-    <a href="{{route('google-auth')}}" class="text-decoration-none">
-        <button class="btn btn-danger google-btn w-100 mt-3 text-white">
-            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google Logo">
-            Continuer avec Google
-        </button>
-    </a>
 </div>
 
 </body>
