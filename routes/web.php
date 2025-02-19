@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\PasswordController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,9 @@ Route::post('/logout', function () {
     return redirect('/login'); // Redirect to the home page or any other page
 })->name('logout');
 
+Route::get('/demande', function(){
+    return view('demande');
+});
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::post('/register', [UserController::class, 'register'])->name('register');
 
@@ -56,7 +60,17 @@ Route::get('/testroute',function(){
     Mail::to('khaoulabhaou@gmail.com')->send(new MyTestEmail($name));
 });
 
-Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+// Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
+});
+
 
 // Route::get('/forgot-password', 'auth.forgot-password')->name('password.request');
 

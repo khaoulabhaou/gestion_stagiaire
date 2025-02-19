@@ -66,8 +66,8 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-                <input type="checkbox" class="form-check-input" id="remember">
-                <label class="form-check-label" for="remember">Se souvenir de moi</label>
+                {{-- <input type="checkbox" class="form-check-input" id="remember">
+                <label class="form-check-label" for="remember">Se souvenir de moi</label> --}}
             <div class="d-flex justify-content-between">
                 <a href="{{ route('login') }}" class="text-decoration-none already-account">Vous avez déjà un compte ?</a>
                 <button type="submit" class="btn btn-success text-white">S'inscrire</button>

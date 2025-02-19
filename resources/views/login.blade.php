@@ -79,11 +79,11 @@
             @enderror
         </div>
 
-        <!-- Remember Me Checkbox -->
+        <!-- Remember Me Checkbox 
         <div class="form-check">
             <input type="checkbox" name="remember" class="form-check-input" id="remember">
             <label class="form-check-label" for="remember">Se souvenir de moi</label>
-        </div>
+        </div>-->
 
         <!-- Submit Button & Register Link -->
         <div class="d-flex justify-content-between mt-3">
