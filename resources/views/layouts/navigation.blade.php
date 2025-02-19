@@ -4,9 +4,9 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <div class="shrink-10 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <img style="width: 3.4rem;height:3.4rem" src="https://i.postimg.cc/TwQ8RCyY/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview-removebg-preview.png" class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"/>
                     </a>
                 </div>
 

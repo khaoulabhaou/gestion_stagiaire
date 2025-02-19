@@ -25,23 +25,6 @@
             text-align: center;
             margin-bottom: 20px;
         }
-
-        .google-btn {
-            background-color: #000;
-            color: white;
-            border: none;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .google-btn img {
-            width: 20px;
-            height: 20px;
-        }
-
         .forgot-password,
         .already-account {
             text-align: center;
@@ -60,7 +43,7 @@
 
 <div class="login-container">
     <div class="logo">
-        <img style="width: 25%" src="https://i.postimg.cc/yxx2KxX2/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview.png" alt="Logo" />
+        <img style="width: 25%" src="https://i.postimg.cc/TwQ8RCyY/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview-removebg-preview.png" alt="Logo" />
     </div>
 
     <!-- Displaying general login errors in Bootstrap alert -->
@@ -81,7 +64,7 @@
             @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-        </div>
+        </div>      
 
         <!-- Password Field with Bootstrap Validation -->
         <div class="mb-3">

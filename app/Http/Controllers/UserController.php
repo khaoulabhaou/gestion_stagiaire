@@ -9,7 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller
-{
+{   
+    public function logout(){
+        Auth::logout();
+        return redirect('/login');
+    }
+
+
     public function login(Request $request)
     {
         // Validate the input fields
@@ -33,7 +39,12 @@ class UserController extends Controller
         if (!Auth::attempt($request->only('email', 'password'), $request->has('remember'))) {
             return back()->withErrors(['password' => 'Mot de passe incorrect.']);
         }
-    
+
+        // If 'remember me' is checked, store the email in a cookie for 30 days
+        if ($request->has('remember')) {
+            cookie('email', $request->email, 43200); // 30 days
+        }
+        
         // Regenerate session for security
         $request->session()->regenerate();
     
@@ -41,17 +52,11 @@ class UserController extends Controller
         return redirect('dashboard')->with('Success', 'Connexion réussie.');
     }
     
-    
-    
-    public function logout(){
-        Auth::logout();
-        return redirect('/login');
-    }
 
-
-    public function register(Request $request)
+ public function register(Request $request)
     {
         try {
+            // Validate the incoming request fields
             $incomingfields = $request->validate([
                 'name' => ['required', 'min:5', 'max:25', Rule::unique('users', 'name')],
                 'email' => ['required', 'email', Rule::unique('users', 'email')],
@@ -64,29 +69,42 @@ class UserController extends Controller
                     'regex:/[\W_]/', // At least one special character
                 ]
             ], [
-                'password.regex' => 'Le mot de passe doit contenir au moins une lettre majuscule, un chiffre et un caractère spécial.',
-                'password.min' => 'Le mot de passe doit comporter au moins 8 caractères.',
-                'password.max' => 'Le mot de passe ne peut pas dépasser 15 caractères.',
+                'name.required' => 'Le nom d\'utilisateur est obligatoire.',
+                'name.unique' => 'Le nom a déjà été pris.',
                 'name.min' => 'Le nom d\'utilisateur doit comporter au moins 5 caractères.',
                 'name.max' => 'Le nom d\'utilisateur ne peut pas dépasser 25 caractères.',
+                'email.required' => 'L\'e-mail est obligatoire.',
+                'email.email' => 'L\'adresse e-mail doit être une adresse valide.',
+                'email.unique' => 'Cet e-mail est déjà enregistré. Veuillez en utiliser un autre.',
+                'password.required' => 'Le mot de passe est obligatoire.',
+                'password.min' => 'Le mot de passe doit comporter au moins 8 caractères.',
+                'password.max' => 'Le mot de passe ne peut pas dépasser 15 caractères.',
+                'password.regex' => 'Le mot de passe doit contenir au moins une lettre, un chiffre et un caractère spécial.',
             ]);
-    
+
+            // Hash the password
             $incomingfields['password'] = bcrypt($incomingfields['password']);
+            
+            // Create the new user
             $user = User::create($incomingfields);
-    
+
             // Fire the Registered event to trigger email verification
             event(new Registered($user));
-    
+
+            // Log the user in
             Auth::login($user);
-    
-            // Redirect to the email verification page
+
+            // Redirect to the email verification page with a success message
             return redirect()->route('verification.notice')->with('success', 'Veuillez vérifier votre adresse e-mail.');
-    
+
         } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->getCode() == 23000) { // Integrity constraint violation
-                return back()->withErrors(['email' => 'This email is already registered. Please use a different one.']);
+            // Handle database errors, such as when the email already exists
+            if ($e->getCode() == 23000) { // Integrity constraint violation (duplicate email)
+                return back()->withErrors(['email' => 'Cet e-mail est déjà enregistré. Veuillez en utiliser un autre.']);
             }
-            return back()->withErrors(['error' => 'Something went wrong!']);
+
+            // Catch any other errors and show a generic error message
+            return back()->withErrors(['error' => 'Quelque chose s\'est mal passé !']);
         }
-    }  
+    }
 }

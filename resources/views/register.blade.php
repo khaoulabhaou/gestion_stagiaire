@@ -22,20 +22,6 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        .google-btn {
-            background-color: #000;
-            color: white;
-            border: none;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .google-btn img {
-            width: 20px;
-            height: 20px;
-        }
         .forgot-password, .already-account {
             text-align: center;
             margin-top: 10px;
@@ -51,33 +37,33 @@
 
     <div class="login-container">
         <div class="logo">
-            <img style="width: 25%" src='https://i.postimg.cc/yxx2KxX2/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview.png' alt='Logo'/>
+            <img style="width: 25%" src='https://i.postimg.cc/TwQ8RCyY/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview-removebg-preview.png' alt='Logo'/>
         </div>
         <form method="POST" action="{{ route('register') }}">
             @csrf
             <div class="mb-3">
                 <label for="username" class="form-label">Nom d'utilisateur</label>
-                <input type="text" name="name" class="form-control" id="username" placeholder="Entrez votre nom d'utilisateur">
+                <input type="text" name="name" class="form-control @error('email') is-invalid @enderror" id="username" placeholder="Entrez votre nom d'utilisateur">
                 @error('name')
-                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail</label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="Entrez votre e-mail" value="{{ old('email') }}">
+                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                       id="email" placeholder="Entrez votre e-mail" value="{{ old('email') }}">
                 @error('email')
-                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-            </div>
+            </div>            
             <div class="mb-3">
                 <div class="d-flex justify-content-between">
-                    <label for="password" class="form-label">Mot de passe</label> 
-                    <a href="#" class="text-decoration-none mt-1" style="font-size: 12px">Mot de passe oublié ?</a>
+                    <label for="password" class="form-label">Mot de passe</label>
                 </div>
-                
-                <input type="password" name="password" class="form-control" id="password" placeholder="Entrez votre mot de passe">
+                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                       id="password" placeholder="Entrez votre mot de passe">
                 @error('password')
-                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
                 <input type="checkbox" class="form-check-input" id="remember">
