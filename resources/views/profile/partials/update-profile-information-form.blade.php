@@ -1,3 +1,4 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -49,7 +50,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Enregistrer') }}</x-primary-button>
+            <button class="btn btn-success">{{ __('Enregistrer') }}</button>
 
             @if (session('status') === 'profile-updated')
                 <p

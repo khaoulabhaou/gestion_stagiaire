@@ -1,0 +1,156 @@
+@import url(animtaion/alert-box-animation.css);
+@import url(animtaion/count-message-animation.css);
+
+.mainBox section {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    flex-grow: 1;
+    margin-left: 25rem;
+    transition: 1s;
+}
+
+.mainSec .MainSecHeader {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+    margin: 0rem 1rem;
+}
+
+.mainSec .MainSecHeader .searchDiv {
+    position: relative;
+}
+
+.mainSec .MainSecHeader .searchDiv svg {
+    position: absolute;
+    top: 0.5rem;
+    left: 2rem;
+    color: lightslategray;
+    font-size: 2rem;
+}
+
+.mainSec .MainSecHeader .searchDiv input {
+    outline: none;
+    background-color: #f3f3f37d;
+    border-radius: 0.5rem;
+    border: 0.1rem solid #d3d3d359;
+    height: 3rem;
+    margin-left: 1rem;
+    padding-left: 4rem;
+    color: lightslategray;
+    box-shadow: 0rem 0rem 0.1rem 0.1rem lightgrey;
+}
+
+.mainSec .MainSecHeader .searchDiv input::placeholder {
+    color: lightslategray;
+}
+
+.mainSec .MainSecHeader .userInfoDiv {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    margin-right: 1rem;
+    align-items: center;
+}
+
+.mainSec .MainSecHeader .userInfoDiv .questionBox svg {
+    font-size: 2rem;
+    color: gray;
+}
+
+.mainSec .MainSecHeader .userInfoDiv .alertBox {
+    position: relative;
+    font-size: 2rem;
+}
+
+.mainSec .MainSecHeader .userInfoDiv .alertBox svg:nth-child(2) {
+    position: absolute;
+    top: -0.66rem;
+    right: 0rem;
+    width: 0.7rem;
+    color: goldenrod;
+}
+
+.mainSec .MainSecHeader .userInfoDiv .userNameBox {
+    margin: 0rem 2rem 0rem 1rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+    position: relative;
+    padding-bottom: 0.3rem;
+}
+
+.mainSec .MainSecHeader .userInfoDiv .userNameBox svg {
+    transform: rotate(180deg);
+    position: absolute;
+    top: 0.2rem;
+    right: -2rem;
+}
+
+.mainSec .MainSecHeader .userInfoDiv .userNameImage img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 0.1rem solid gray;
+}
+
+@media only screen and (max-width: 768px) {
+    .mainBox section {
+        border-left: 0rem;
+        padding-left: 6rem;
+        width: 100%;
+        margin-left: 0rem;
+    }
+    .mainBox {
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 590px) {
+    .mainSec .MainSecHeader {
+        flex-direction: column-reverse;
+        align-content: flex-end;
+        gap: 1rem;
+        align-items: flex-end;
+        border-bottom: 0.11rem solid lightgray;
+        padding-bottom: 1rem;
+    }
+
+    .mainSec .MainSecHeader .parentSearchBox {
+        width: 100%;
+    }
+
+    .mainBox section {
+        padding-left: 0rem;
+    }
+
+    .mainSec .MainSecHeader .searchDiv input {
+        width: 95%;
+    }
+}
+
+@media only screen and (max-width: 345px) {
+    .mainSec .MainSecHeader .userInfoDiv {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 0 auto;
+        margin-top: 4rem;
+    }
+}
+
+@media only screen and (max-width: 270px) {
+    .mainSec .secHeader {
+        flex-direction: column !important;
+        margin: 1rem 0rem !important;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 0.1rem solid lightgray;
+    }
+    .mainSec .secHeader select {
+        width: 95%;
+    }
+}

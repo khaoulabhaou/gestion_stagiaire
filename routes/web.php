@@ -20,6 +20,14 @@ Route::get('/home', function() {
     return view('home');
 });
 
+Route::get('/index', function () {
+    return view('index');
+});
+
+Route::get('/sidebar',function (){
+    return view('sidebar');
+});
+
 Route::get('/login', function(){
     return view('login');
 });
