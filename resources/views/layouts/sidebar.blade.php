@@ -1,147 +1,47 @@
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Skydash Admin</title>
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="/vendors/feather/feather.css">
-    <link rel="stylesheet" href="/vendors/ti-icons/css/themify-icons.css">
-    <link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
-    <link rel="stylesheet" href="/vendors/ti-icons/css/themify-icons.css">
-    <link rel="stylesheet" type="text/css" href="/js/select.dataTables.min.css">
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <link rel="stylesheet" href="/css/vertical-layout-light/style.css">
-    <!-- endinject -->
-    <link rel="shortcut icon" href="/images/.png" />
-</head>
-<body>
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link {{ request()->is('admin/dashboard') ? 'active' : '' }}"
-                href="{{ route('admin.dashboard') }}">
-                <i class="fas fa-home" style="margin-right: 11.5%"></i>
-                <span class="menu-title">Dashboard</span>
-            </a>
-        </li>
+<header class="header" id="header">
+    <div class="header_toggle">
+        <i class="bx bx-menu" id="header-toggle"></i>
+    </div>
+    <div class="header_img">
+        <img src="https://scontent.fccu2-3.fna.fbcdn.net/v/t39.30808-6/373611637_2003925126646573_1171042221997763294_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=EAqcT2FLHl4AX91Pdji&_nc_ht=scontent.fccu2-3.fna&oh=00_AfBLAGK4oYl8MD_ntFjH1V_7R-cE4DAlF4ixUm0YzbjjXw&oe=653B84F0" alt="">
+    </div>
+</header>
 
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false"
-                aria-controls="error">
-                <i class="fas fa-user" style="margin-right : 11.5%"></i>
-                <span class="menu-title">Stagiaires</span>
-            </a>
-            <div class="collapse" id="error">
-                <ul class="nav flex-column sub-menu">
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-404.html">
-                            <i class="fas fa-plus"></i> Ajouter Stagiaires
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-500.html">
-                            <i class="fas fa-list"></i> List De Stagiaires
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-500.html">
-                            <i class="fas fa-archive"></i> Archives
-                        </a>
-                    </li>
-                </ul>
-                
+<div class="l-navbar" id="nav-bar">
+    <nav class="nav">
+        <div>
+            <div class="nav_list">
+            <p class="nav_link flex" style="padding: 0">
+                <img width="30%" style="margin: 9.5%;padding:0" src="https://i.postimg.cc/TwQ8RCyY/Whats-App-Image-2025-l02-11-at-10-38-33-526755f1-1-Copy-removebg-preview-removebg-preview.png" alt="" srcset="">
+                <span style="font-size: 16px">l'Agence Urbain</span>
+            </p>
+                <p class="nav_link">
+                    {{-- <i class="fa-solid fa-house nav_icon"></i> --}}
+                    <i class="material-icons">home</i> 
+                    <span>Accueil</span>
+                </p>
+                <p class="nav_link">
+                    {{-- <i class="fa-solid fa-user nav_icon"></i> --}}
+                    <i class="fa-solid fa-user" style="margin-left: 0.29rem"></i>
+                    <span>Stagiaires</span>
+                </p>
+                <p class="nav_link">
+                    {{-- <i class="fa-solid fa-user-tie nav_icon"></i> --}}
+                    <i class="fa-solid fa-user-tie" style="margin-left: 0.29rem"></i>
+                    <span>Encadrants</span>
+                </p>
+                <p class="nav_link">
+                    <i class="material-icons">badge</i>
+                    <span>Stages</span>
+                </p>
             </div>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link {{ request()->is('admin/user*') ? 'active' : '' }}" data-toggle="collapse"
-                href="#form-elements" aria-expanded="false" aria-controls="form-elements">
-                <i class="fas fa-user-tie" style="margin-right: 11.5%"></i> 
-                <span class="menu-title">Encadrants</span>
-                
-            </a>
-            <div class="collapse" id="form-elements">
-                <ul class="nav flex-column sub-menu">
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-404.html">
-                            <i class="fas fa-plus"></i> Ajouter Encadrant
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-500.html">
-                            <i class="fas fa-list"></i> List D'Encadrants
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-500.html">
-                            <i class="fas fa-archive"></i> Archive
-                        </a>
-                    </li>
-                </ul>
-                
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false"
-                aria-controls="charts">
-                <i class="fas fa-flask" style="margin-right: 11.5%"></i>
-                <span class="menu-title">Service</span>
-                
-            </a>
-            <div class="collapse" id="charts">
-                <ul class="nav flex-column sub-menu">
-                    <li> <a class="nav-link text-white" href="pages/charts/chartjs.html"><i class="fas fa-list"></i> Liste Service</a>
-                    </li>
-                    <li> <a class="nav-link text-white" href="pages/charts/chartjs.html"><i class="fas fa-plus"></i>Créer Service</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false"
-                aria-controls="tables">
-                <i class="fas fa-briefcase" style="margin-right: 11.5% "></i>
-                <span class="menu-title">Stages</span>
-                
-            </a>
-            <div class="collapse" id="tables">
-                <ul class="nav flex-column sub-menu">
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-404.html">
-                            <i class="fas fa-plus"></i> Ajouter Stage
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-500.html">
-                            <i class="fas fa-list"></i>List Des Stages
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-white" href="pages/samples/error-500.html">
-                            <i class="fas fa-archive"></i> Archive
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false"
-                aria-controls="icons">
-                <i class="fas fa-envelope" style="margin-right: 11.5%"></i>
-                <span class="menu-title">Demandes</span>
-            </a>
-            <div class="collapse" id="icons">
-                <ul class="nav flex-column sub-menu">
-                    <li> <a class="nav-link text-white" href="pages/icons/mdi.html"><i class="fas fa-plus"></i>Créer Demande</a></li>
-                    <li> <a class="nav-link text-white" href="pages/icons/mdi.html"><i class="fas fa-archive"></i>Archive</a></li>
-                </ul>
-            </div>
-        </li>
-    </ul>
-</nav>
-</body>
+        </div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="nav_link" style="border: none; background: none; cursor: pointer;">
+                <i class="bx bx-log-out nav_icon"></i>
+                <span>Sign Out</span>
+            </button>
+        </form>        
+    </nav>
+</div>

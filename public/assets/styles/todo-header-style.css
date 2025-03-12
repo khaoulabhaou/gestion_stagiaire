@@ -18,6 +18,8 @@
     flex-wrap: wrap;
     padding-top: 1rem;
     margin: 0rem 1rem;
+    position: absolute;
+    right: 0;
 }
 
 .mainSec .MainSecHeader .searchDiv {
@@ -86,6 +88,7 @@
 .mainSec .MainSecHeader .userInfoDiv .userNameBox svg {
     transform: rotate(180deg);
     position: absolute;
+    right: 0%;
     top: 0.2rem;
     right: -2rem;
 }

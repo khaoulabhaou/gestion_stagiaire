@@ -21,11 +21,12 @@ Route::get('/home', function() {
 });
 
 Route::get('/index', function () {
-    return view('index');
-});
+    return view('index'); 
+})->name('index');
+
 
 Route::get('/sidebar',function (){
-    return view('sidebar');
+    return view('layouts.sidebar');
 });
 
 Route::get('/login', function(){

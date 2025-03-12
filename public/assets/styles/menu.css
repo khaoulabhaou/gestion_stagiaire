@@ -12,12 +12,7 @@
 .mainBox nav .headerText {
     font-size: 2.4rem;
     width: fit-content;
-    padding: 1rem 0rem 0rem 2rem;
-}
-
-.mainBox nav .headerText:hover {
-    filter: blur(0.2rem);
-    cursor: wait;
+    margin: 1.75rem 2rem 0rem 3rem;
 }
 
 .mainBox nav .menu {
