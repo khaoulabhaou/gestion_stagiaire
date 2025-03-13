@@ -38,6 +38,7 @@ a {
                     z-index: var(--z-fixed);
                     transition: 0.5s;
                     box-shadow:  0 4px 6px rgba(0, 0, 0, 0.1);
+                    background-color: white;
 }
 
 .header_toggle {
