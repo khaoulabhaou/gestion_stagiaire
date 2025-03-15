@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\StageController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -92,3 +93,10 @@ Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
 ->name('password.reset');
 Route::post('reset-password', [NewPasswordController::class, 'store'])
 ->name('password.store');
+
+Route::get('/stages/create', [StageController::class, 'create'])->name('stages.create');
+Route::post('/stages/store', [StageController::class, 'store'])->name('stages.store');
+Route::get('/ajouter', function(){
+    return view('stages.ajouter');
+});
+// return view('stages.ajouter', compact('services', 'stagiaires'));

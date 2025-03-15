@@ -44,26 +44,48 @@
     <nav class="nav">
         <div>
             <div class="nav_list">
-                <p class="nav_link flex" style="padding: 0">
-                    <img width="30%" style="margin: 9.5%;padding:0" src="https://i.postimg.cc/TwQ8RCyY/Whats-App-Image-2025-l02-11-at-10-38-33-526755f1-1-Copy-removebg-preview-removebg-preview.png" alt="" srcset="">
-                    <span style="font-size: 16px">l'Agence Urbain</span>
+                <p class="nav_link flex" style="padding: 0;margin-bottom:3rem">
+                    <img width="30%" style="margin: 9.5% 0 0 3.9%;padding:0" src="https://i.postimg.cc/TwQ8RCyY/Whats-App-Image-2025-l02-11-at-10-38-33-526755f1-1-Copy-removebg-preview-removebg-preview.png" alt="" srcset="">
+                    <span style="font-size: 16px;margin-top:10%">l'Agence Urbain de Lâayoune</span>
                 </p>
-                <p class="nav_link">
+                <p class="nav_link flex">
                     <i class="material-icons">home</i> 
                     <span>Accueil</span>
                 </p>
-                <p class="nav_link">
-                    <i class="fa-solid fa-user" style="margin-left: 0.29rem"></i>
-                    <span>Stagiaires</span>
-                </p>
-                <p class="nav_link">
-                    <i class="fa-solid fa-user-tie" style="margin-left: 0.29rem"></i>
-                    <span>Encadrants</span>
-                </p>
-                <p class="nav_link">
-                    <i class="material-icons">badge</i>
-                    <span>Stages</span>
-                </p>
+                <!-- Stagiaires Dropdown -->
+                <div class="nav_link dropdown" style="padding : 23px">
+                    <div class="flex">
+                        <i class="fa-solid fa-user" style="margin-left: 0.29rem"></i>
+                        <span>Stagiaires</span>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="#">List Stagiaire</a>
+                        <a href="#">Archive</a>
+                        <a href="#">Ajouter</a>
+                    </div>
+                </div>
+                <!-- Encadrants Dropdown -->
+                <div class="nav_link dropdown" style="padding : 22px">
+                    <div class="flex">
+                        <i class="fa-solid fa-user-tie" style="margin-left: 0.29rem"></i>
+                        <span>Encadrants</span>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="#">Ajouter Encadrant</a>
+                        <a href="#">List d'Encadrant</a>
+                    </div>
+                </div>
+                <!-- Stages Dropdown -->
+                <div class="nav_link dropdown" style="padding : 23px">
+                    <div class="flex">
+                        <i class="material-icons">badge</i>
+                        <span>Stages</span>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="{{ route('stages.create')}}">Ajouter Stage</a>
+                        <a href="#">List de Stage</a>
+                    </div>
+                </div>
             </div>
         </div>
         <form method="POST" action="{{ route('logout') }}">
@@ -75,3 +97,42 @@
         </form>        
     </nav>
 </div>
+
+<!-- Add some CSS for the dropdown -->
+<style>
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        left: 7%; /* Move dropdown 7% to the right */
+        top: 100%;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .flex {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Adjust the gap between icon and text */
+    }
+</style>
