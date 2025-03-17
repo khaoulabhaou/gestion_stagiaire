@@ -35,9 +35,11 @@
                 <label for="ID_service" class="form-label">Service</label>
                 <select name="ID_service" id="ID_service" class="form-control" required>
                     <option value="">Sélectionner un service</option>
-                    {{-- @foreach($services as $service)
-                        <option value="{{ $service->id_service }}">{{ $service->nom_service }}</option>
-                    @endforeach --}}
+                    @foreach($services as $service)
+                        <option value="{{ $service->id }}" {{ $selectedService == $service->id ? 'selected' : '' }}>
+                            {{ $service->nom_service }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
             <!-- Stagiaire (Foreign Key) -->
@@ -45,9 +47,11 @@
                 <label for="ID_stagiaire" class="form-label">Stagiaire</label>
                 <select name="ID_stagiaire" id="ID_stagiaire" class="form-control" required>
                     <option value="">Sélectionner un stagiaire</option>
-                    {{-- @foreach($stagiaires as $stagiaire)
-                        <option value="{{ $stagiaire->ID_stagiaire }}">{{ $stagiaire->nom }}</option>
-                    @endforeach --}}
+                    @if(isset($stagiaires))
+                        @foreach($stagiaires as $stagiaire)
+                            <option value="{{ $stagiaire->id }}">{{ $stagiaire->nom }} {{ $stagiaire->prénom }}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
         </div>

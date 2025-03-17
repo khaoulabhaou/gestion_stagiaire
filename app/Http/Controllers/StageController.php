@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,12 +8,25 @@ use App\Models\Service; // Import Service model
 
 class StageController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
+        // Fetch all services
         $services = Service::all();
-        $stagiaires = Stagiaire::all();
-    
-        return view('stages.ajouter', compact('services', 'stagiaires'));
+
+        // Initialize variables
+        $selectedService = $request->input('ID_service'); // Get the selected service ID from the request
+        $stagiaires = [];
+
+        // If a service is selected, fetch stagiaires for that service
+        if ($selectedService) {
+            $stagiaires = Stagiaire::where('service_id', $selectedService)->get();
+        } else {
+            // If no service is selected, fetch all stagiaires (optional)
+            $stagiaires = Stagiaire::all();
+        }
+
+        // Pass data to the view
+        return view('stages.ajouter', compact('services', 'stagiaires', 'selectedService'));
     }
 
     public function store(Request $request)
