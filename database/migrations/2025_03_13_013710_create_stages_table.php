@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('date_fin');
             $table->text('description');
             $table->foreignId('ID_service')->constrained('services')->onDelete('cascade');
-            $table->foreignId('ID_stagiaire')->constrained('stagiaires')->onDelete('cascade');
+            $table->foreignId('id_stagiaire')->constrained('stagiaires')->onDelete('cascade');
             $table->timestamps(); // Add timestamps
         });
     }

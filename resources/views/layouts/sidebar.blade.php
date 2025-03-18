@@ -83,7 +83,7 @@
                     </div>
                     <div class="dropdown-content">
                         <a href="{{ route('stages.create')}}">Ajouter Stage</a>
-                        <a href="#">List de Stage</a>
+                        <a href="{{ route('stages.index')}}">List de Stage</a>
                     </div>
                 </div>
             </div>

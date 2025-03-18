@@ -94,9 +94,23 @@ Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
 Route::post('reset-password', [NewPasswordController::class, 'store'])
 ->name('password.store');
 
+//Routing for stage
+
 Route::get('/stages/create', [StageController::class, 'create'])->name('stages.create');
 Route::post('/stages/store', [StageController::class, 'store'])->name('stages.store');
 Route::get('/ajouter', function(){
     return view('stages.ajouter');
 });
+
+// List all stages
+Route::get('/stages', [StageController::class, 'index'])->name('stages.index');
+
+// Edit a stage
+Route::get('/stages/{id}/edit', [StageController::class, 'edit'])->name('stages.edit');
+
+// Update a stage
+Route::put('/stages/{id}', [StageController::class, 'update'])->name('stages.update');
+
+// Delete a stage
+Route::delete('/stages/{id}', [StageController::class, 'destroy'])->name('stages.destroy');
 // return view('stages.ajouter', compact('services', 'stagiaires'));

@@ -17,11 +17,11 @@ class Stage extends Model
 
     protected $fillable = [
         'titre',
-        'date_debut',
+        'date_début',
         'date_fin',
         'description',
         'ID_service',
-        'ID_stagiaire',
+        'id_stagiaire',
     ];
 
     // Relationship with Service
@@ -29,10 +29,10 @@ class Stage extends Model
     {
         return $this->belongsTo(Service::class, 'ID_service');
     }
-
-    // Relationship with Stagiaire
+    
     public function stagiaire()
     {
-        return $this->belongsTo(Stagiaire::class, 'ID_stagiaire');
+        return $this->belongsTo(Stagiaire::class, 'id_stagiaire');
     }
+
 }

@@ -16,7 +16,7 @@
             </div>
             <div class="col-4">
                 <label for="date_debut" class="form-label">Date de début</label>
-                <input type="date" name="date_debut" id="date_debut" class="form-control" required>
+                <input type="date" name="date_début" id="date_début" class="form-control" required>
             </div>
         </div>
         <div class="row">
@@ -36,7 +36,7 @@
                 <select name="ID_service" id="ID_service" class="form-control" required>
                     <option value="">Sélectionner un service</option>
                     @foreach($services as $service)
-                        <option value="{{ $service->id }}" {{ $selectedService == $service->id ? 'selected' : '' }}>
+                        <option value="{{ $service->ID_service }}" {{ $selectedService == $service->ID_service ? 'selected' : '' }}>
                             {{ $service->nom_service }}
                         </option>
                     @endforeach
@@ -44,12 +44,12 @@
             </div>
             <!-- Stagiaire (Foreign Key) -->
             <div class="col-4 mb-3">
-                <label for="ID_stagiaire" class="form-label">Stagiaire</label>
-                <select name="ID_stagiaire" id="ID_stagiaire" class="form-control" required>
+                <label for="id_stagiaire" class="form-label">Stagiaire</label>
+                <select name="id_stagiaire" id="id_stagiaire" class="form-control" required>
                     <option value="">Sélectionner un stagiaire</option>
                     @if(isset($stagiaires))
                         @foreach($stagiaires as $stagiaire)
-                            <option value="{{ $stagiaire->id }}">{{ $stagiaire->nom }} {{ $stagiaire->prénom }}</option>
+                            <option value="{{ $stagiaire->ID_stagiaire }}">{{ $stagiaire->nom }} {{ $stagiaire->prénom }}</option>
                         @endforeach
                     @endif
                 </select>
