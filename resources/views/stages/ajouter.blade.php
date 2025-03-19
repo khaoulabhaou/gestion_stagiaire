@@ -1,6 +1,6 @@
 <x-app-layout>
 
-<header class="mt-5">
+<header style="margin-top:5rem">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
 </header>
 <div class="container">
@@ -9,7 +9,7 @@
     <form action="{{ route('stages.store') }}" method="POST" class="container">
         @csrf
 
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-4 mb-3">
                 <label for="titre" class="form-label">Titre</label>
                 <input type="text" name="titre" id="titre" class="form-control" required>
@@ -18,19 +18,17 @@
                 <label for="date_debut" class="form-label">Date de début</label>
                 <input type="date" name="date_début" id="date_début" class="form-control" required>
             </div>
-        </div>
-        <div class="row">
             <div class="col-4 mb-3">
                 <label for="date_fin" class="form-label">Date de fin</label>
                 <input type="date" name="date_fin" id="date_fin" class="form-control" required>
             </div>
+        </div>
+        <div class="row mt-4">
             <div class="col-4">
                 <label for="description" class="form-label">Description</label>
                 <textarea cols="10" rows="1" name="description" id="description" class="form-control" required></textarea>
             </div>
-        </div>
         <!-- Service (Foreign Key) -->
-        <div class="row">
             <div class="col-4 mb-3">
                 <label for="ID_service" class="form-label">Service</label>
                 <select name="ID_service" id="ID_service" class="form-control" required>
@@ -56,7 +54,7 @@
             </div>
         </div>
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-success">Ajouter Stage</button>
+        <button type="submit" class="btn btn-success mt-4">Ajouter Stage</button>
     </form>
 </div>
 </x-app-layout>

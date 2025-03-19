@@ -48,10 +48,12 @@
                     <img width="30%" style="margin: 9.5% 0 0 3.9%;padding:0" src="https://i.postimg.cc/TwQ8RCyY/Whats-App-Image-2025-l02-11-at-10-38-33-526755f1-1-Copy-removebg-preview-removebg-preview.png" alt="" srcset="">
                     <span style="font-size: 16px;margin-top:10%">l'Agence Urbain de Lâayoune</span>
                 </p>
-                <p class="nav_link flex">
-                    <i class="material-icons">home</i> 
-                    <span>Accueil</span>
-                </p>
+                
+                    <a href="{{ route('dashboard') }}" class="nav_link flex" style="text-decoration: none">
+                        <i class="material-icons">home</i> 
+                        <span>Accueil</span>
+                    </a>                    
+                
                 <!-- Stagiaires Dropdown -->
                 <div class="nav_link dropdown" style="padding : 23px">
                     <div class="flex">
