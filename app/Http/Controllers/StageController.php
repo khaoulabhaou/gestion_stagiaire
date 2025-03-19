@@ -53,8 +53,11 @@ class StageController extends Controller
     }
     public function index()
     {
-        // Eager load service and stagiaire relationships
-        $stages = Stage::with(['service', 'stagiaire'])->get();
+        // Fetch stages with valid service and stagiaire relationships
+        $stages = Stage::whereHas('service')
+                       ->whereHas('stagiaire')
+                       ->with(['service', 'stagiaire'])
+                       ->get();
     
         return view('stages.list', compact('stages'));
     }

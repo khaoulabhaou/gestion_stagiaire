@@ -56,7 +56,7 @@
             </div>
         </div>
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Ajouter Stage</button>
+        <button type="submit" class="btn btn-success">Ajouter Stage</button>
     </form>
 </div>
 </x-app-layout>

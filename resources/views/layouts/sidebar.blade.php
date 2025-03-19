@@ -59,9 +59,9 @@
                         <span>Stagiaires</span>
                     </div>
                     <div class="dropdown-content">
-                        <a href="#">List Stagiaire</a>
+                        <a href="#">Ajouter Stagiaire</a>
+                        <a href="#">List de Stagiaires</a>
                         <a href="#">Archive</a>
-                        <a href="#">Ajouter</a>
                     </div>
                 </div>
                 <!-- Encadrants Dropdown -->

@@ -51,7 +51,7 @@
                     </select>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            <button type="submit" class="btn btn-success">Mettre à jour</button>
         </form>
     </div>
 </x-app-layout>

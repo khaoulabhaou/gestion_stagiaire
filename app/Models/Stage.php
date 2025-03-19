@@ -32,7 +32,7 @@ class Stage extends Model
     
     public function stagiaire()
     {
-        return $this->belongsTo(Stagiaire::class, 'id_stagiaire');
-    }
+        return $this->belongsTo(Stagiaire::class, 'id_stagiaire', 'ID_stagiaire');
+    }    
 
 }
