@@ -34,15 +34,15 @@ class StageController extends Controller
         $request->validate([
             'titre' => 'required|string|max:255',
             'date_début' => 'required|date',
-            'date_fin' => 'required|date|after_or_equal:date_début',
+            'date_fin' => 'required|date|after:date_début', // Ensure date_fin is strictly after date_début
             'description' => 'required|string',
-            'ID_service' => 'required|exists:service,ID_service', // Corrected to use ID_service
-            'id_stagiaire' => 'required|exists:stagiaire,ID_stagiaire', // Corrected to use ID_stagiaire
+            'ID_service' => 'required|exists:service,ID_service',
+            'id_stagiaire' => 'required|exists:stagiaire,ID_stagiaire',
         ]);
     
         Stage::create([
             'titre' => $request->titre,
-            'date_début' => $request->date_début, // Match the form field name
+            'date_début' => $request->date_début,
             'date_fin' => $request->date_fin,
             'description' => $request->description,
             'ID_service' => $request->ID_service,
@@ -107,5 +107,10 @@ class StageController extends Controller
     
         // Redirect back with a success message
         return redirect()->route('stages.index')->with('success', 'Stage supprimé avec succès !');
+    }
+    public function getStagiairesByService($serviceId)
+    {
+        $stagiaires = Stagiaire::where('ID_service', $serviceId)->get();
+        return response()->json($stagiaires);
     }
 }

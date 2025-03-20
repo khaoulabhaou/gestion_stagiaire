@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Stage;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
-        return view('dashboard');
+        // Get the count of stages
+        $stagesCount = Stage::count();
+
+        // Pass the variable to the view
+        return view('dashboard', compact('stagesCount'));
     }
 }

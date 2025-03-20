@@ -52,8 +52,8 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 // Routes for authenticated users
 Route::middleware('auth')->group(function () {
     // User Dashboard Route
-    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('verified')->name('dashboard');
-
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware('verified')->name('dashboard');
+    
     // Logout Route
     // Email Verification Notice route
     Route::get('/email/verify', [AuthController::class, 'verifyEmailNotice'])->name('verification.notice');
@@ -101,7 +101,7 @@ Route::post('/stages/store', [StageController::class, 'store'])->name('stages.st
 Route::get('/ajouter', function(){
     return view('stages.ajouter');
 });
-
+Route::get('/stagiaires/{serviceId}', [StageController::class, 'getStagiairesByService'])->name('stagiaires.byService');
 // List all stages
 Route::get('/stages', [StageController::class, 'index'])->name('stages.index');
 
