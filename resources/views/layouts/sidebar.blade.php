@@ -49,10 +49,10 @@
                     <span style="font-size: 16px;margin-top:10%">l'Agence Urbain de Lâayoune</span>
                 </p>
                 
-                    <a href="{{ route('dashboard') }}" class="nav_link flex" style="text-decoration: none">
-                        <i class="material-icons">home</i> 
-                        <span>Accueil</span>
-                    </a>                    
+                <a href="{{ route('dashboard') }}" class="nav_link flex" style="text-decoration: none">
+                    <i class="fa-solid fa-house" style="margin-left: 0.4%"></i> <!-- Font Awesome home icon -->
+                    <span>Accueil</span>
+                </a>                   
                 
                 <!-- Stagiaires Dropdown -->
                 <div class="nav_link dropdown" style="padding : 23px">
@@ -61,15 +61,15 @@
                         <span>Stagiaires</span>
                     </div>
                     <div class="dropdown-content">
-                        <a href="#">Ajouter Stagiaire</a>
-                        <a href="#">List de Stagiaires</a>
-                        <a href="#">Archive</a>
+                        <a href="{{ route('stagiaires.create') }}">Ajouter Stagiaire</a>
+                        <a href="{{ route('stagiaires.index') }}">List de Stagiaires</a>
+                        <a href="{{ route('stagiaires.archive') }}">Archive</a>
                     </div>
                 </div>
                 <!-- Encadrants Dropdown -->
                 <div class="nav_link dropdown" style="padding : 22px">
                     <div class="flex">
-                        <i class="fa-solid fa-user-tie" style="margin-left: 0.29rem"></i>
+                        <i class="fa-solid fa-user-tie" style="margin-left: 0.45rem"></i>
                         <span>Encadrants</span>
                     </div>
                     <div class="dropdown-content">
@@ -79,8 +79,8 @@
                 </div>
                 <!-- Stages Dropdown -->
                 <div class="nav_link dropdown" style="padding : 23px">
-                    <div class="flex">
-                        <i class="material-icons">badge</i>
+                    <div class="flex" style="margin-left: 0.45rem">
+                        <i class="fa-solid fa-calendar"></i>
                         <span>Stages</span>
                     </div>
                     <div class="dropdown-content">

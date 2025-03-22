@@ -6,12 +6,15 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StageController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EncadrantController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\StageController;
+use App\Http\Controllers\HomController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -114,3 +117,13 @@ Route::put('/stages/{id}', [StageController::class, 'update'])->name('stages.upd
 // Delete a stage
 Route::delete('/stages/{id}', [StageController::class, 'destroy'])->name('stages.destroy');
 // return view('stages.ajouter', compact('services', 'stagiaires'));
+
+//stagiaire routes
+
+Route::get('/stagiaires', [HomController::class, 'create'])->name('stagiaires.create');
+Route::post('/stagiaires/store', [HomController::class, 'store'])->name('stagiaires.store');
+Route::get('/stagiaires/index', [HomController::class, 'index'])->name('stagiaires.index');
+// Route::get('/stagiaires/archive', [HomController::class, 'index'])->name('stagiaires.archive');
+Route::get('/stagiaires/{id}/edit', [HomController::class, 'edit'])->name('stagiaires.edit');
+Route::put('/stagiaires/{id}/update', [HomController::class, 'update'])->name('stagiaires.update');
+Route::delete('/stagiaires/{id}', [HomController::class, 'destroy'])->name('stagiaires.destroy');

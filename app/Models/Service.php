@@ -11,6 +11,7 @@ class Service extends Model
 
     protected $table = 'service'; // Table name
     protected $primaryKey = 'ID_service'; // Primary key
+    protected $fillable = ['nom_service'];
 
     public $timestamps = false; // Disable timestamps if not using created_at & updated_at
 

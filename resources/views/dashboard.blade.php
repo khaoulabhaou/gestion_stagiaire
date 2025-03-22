@@ -17,7 +17,7 @@
                         <i class="fas fa-user-plus fa-3x mb-3 text-primary"></i>
                         <h5 class="card-title">Ajouter Stagiaire</h5>
                         <p class="card-text">Ajoutez un nouveau stagiaire à la plateforme.</p>
-                        <a href="#" class="btn btn-primary">Accéder</a>
+                        <a href="{{ route('stagiaires.create') }}" class="btn btn-primary">Accéder</a>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                     <div class="card-body text-center">
                         <i class="fas fa-users fa-3x mb-3 text-info"></i>
                         <h5 class="card-title">Stagiaires</h5>
-                        <p class="card-text">Total : {{-- {{ $stagiairesCount }} --}}
+                        <p class="card-text">Total : {{ $stagiairesCount }}
                         </p>
                     </div>
                 </div>

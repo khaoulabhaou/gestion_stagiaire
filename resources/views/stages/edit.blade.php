@@ -9,7 +9,7 @@
             @csrf
             @method('PUT')
 
-            <div class="row">
+            <div class="row mt-4">
                 <div class="col-4 mb-3">
                     <label for="titre" class="form-label">Titre</label>
                     <input type="text" name="titre" id="titre" class="form-control" value="{{ $stage->titre }}" required>
@@ -18,18 +18,16 @@
                     <label for="date_début" class="form-label">Date de début</label>
                     <input type="date" name="date_début" id="date_début" class="form-control" value="{{ $stage->date_début }}" required>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-4 mb-3">
                     <label for="date_fin" class="form-label">Date de fin</label>
                     <input type="date" name="date_fin" id="date_fin" class="form-control" value="{{ $stage->date_fin }}" required>
                 </div>
+            </div>
+            <div class="row mt-4">
                 <div class="col-4">
                     <label for="description" class="form-label">Description</label>
                     <textarea cols="10" rows="1" name="description" id="description" class="form-control" required>{{ $stage->description }}</textarea>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-4 mb-3">
                     <label for="ID_service" class="form-label">Service</label>
                     <select name="ID_service" id="ID_service" class="form-control" required>
@@ -51,7 +49,8 @@
                     </select>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success">Mettre à jour</button>
+            </div>
+            <button type="submit" class="btn btn-success" style="margin-left: 2.7rem;margin-top:1.5rem">Mettre à jour</button>
         </form>
     </div>
 </x-app-layout>
