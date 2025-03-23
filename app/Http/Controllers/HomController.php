@@ -18,18 +18,16 @@ class HomController extends Controller
         $selectedService = $request->input('ID_service');
 
         return view('stagiaires.create', compact('services', 'selectedService'));
-        return view('stagiaires.edit', compact('services', 'selectedService'));
-
     }
 
-    // ✅ Store stagiaire with establishment and service
+    // ✅ Store stagiaire with unique téléphone
     public function store(Request $request)
     {
         $validated = $request->validate([
             'nom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'prénom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'email' => 'required|email|max:250',
-            'téléphone' => 'required|regex:/^[0-9]{10}$/',
+            'téléphone' => 'required|regex:/^[0-9]{10}$/|unique:stagiaire,téléphone',
             'date_naissance' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
             'nom_etablissement' => 'required|string|max:100',
             'ville' => 'required|string|max:50',
@@ -67,15 +65,13 @@ class HomController extends Controller
         }
     }
 
-    // ✅ List all stagiaires
+    // ✅ List all stagiaires (Ordered by 'nom' ASC)
     public function list()
     {
         $stagiaires = Stagiaire::orderBy('nom', 'asc')->get();
         return view('list', compact('stagiaires'));
-    }
-    
+    }  
 
-    
     // ✅ Show edit page
     public function edit($id)
     {
@@ -85,14 +81,14 @@ class HomController extends Controller
         return view('stagiaires.edit', compact('stagiaire', 'etablissements', 'services'));
     }
 
-    // ✅ Update stagiaire
+    // ✅ Update stagiaire with unique téléphone
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'nom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'prénom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'email' => 'required|email|max:250',
-            'téléphone' => 'required|regex:/^[0-9]{10}$/',
+            'téléphone' => 'required|regex:/^[0-9]{10}$/|unique:stagiaire,téléphone,' . $id . ',ID_stagiaire',
             'date_naissance' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d') . '|after_or_equal:' . now()->subYears(100)->format('Y-m-d'),
             'niveau' => 'required|string|max:20',
             'specialite' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
@@ -102,10 +98,9 @@ class HomController extends Controller
             'ville' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'abréviation' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
         ]);
-    
+
         DB::beginTransaction();
         try {
-            // Update or create the establishment
             $etablissement = Etablissement::find($validated['ID_etablissement']);
             if ($etablissement) {
                 $etablissement->update([
@@ -114,8 +109,7 @@ class HomController extends Controller
                     'abréviation' => $validated['abréviation'],
                 ]);
             }
-    
-            // Update the stagiaire
+
             $stagiaire = Stagiaire::findOrFail($id);
             $stagiaire->update([
                 'nom' => $validated['nom'],
@@ -128,7 +122,7 @@ class HomController extends Controller
                 'ID_etablissement' => $validated['ID_etablissement'],
                 'ID_service' => $validated['ID_service'],
             ]);
-    
+
             DB::commit();
             return redirect()->route('list')->with('success', 'Stagiaire mis à jour avec succès !');
         } catch (\Exception $e) {
@@ -137,22 +131,21 @@ class HomController extends Controller
         }
     }
 
-    // ✅ Delete stagiaire
+    // ✅ Delete stagiaire (Prevent deletion if linked to a stage)
     public function destroy($id)
     {
         // Check if the stagiaire is linked to any stage
         $isRelated = Stage::where('id_stagiaire', $id)->exists();
-    
+
         if ($isRelated) {
             return redirect()->route('list')->with('error', 'Impossible de supprimer ce stagiaire car il est associé à un stage. Veuillez d\'abord supprimer le stage.');
         }
-    
+
         // Find the stagiaire by ID and delete it
         $stagiaire = Stagiaire::findOrFail($id);
         $stagiaire->delete();
-    
+
         // Redirect back with a success message
         return redirect()->route('list')->with('success', 'Stagiaire supprimé avec succès !');
     }
-    
 }
