@@ -9,6 +9,11 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <!-- Button to add a new stagiaire -->
         <div class="d-flex justify-content-end mb-3">
             <a href="{{ route('stagiaires.create') }}" class="btn btn-success" style="margin-right: 7px">
@@ -64,11 +69,10 @@
         </div>
     </div>
 
-    {{-- <script>
+    <script>
         function testDelete() {
             return confirm("Are you sure you want to delete?");
         }
-    </script> --}}
-
+    </script>
     </body>
 </x-app-layout>

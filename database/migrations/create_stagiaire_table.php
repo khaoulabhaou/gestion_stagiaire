@@ -17,8 +17,8 @@ class CreatestagiaireTable extends Migration
             $table->date('date_naissance');
             $table->string('niveau');
             $table->string('specialite');
-            $table->foreignId('ID_service')->constrained('service')->onDelete('cascade'); // Clé étrangère vers service
-            $table->foreignId('ID_etablissement')->constrained('etablissement')->onDelete('cascade'); // Clé étrangère vers etablissements
+            $table->foreignId('ID_service')->constrained('service'); // Clé étrangère vers service
+            $table->foreignId('ID_etablissement')->constrained('etablissement'); // Clé étrangère vers etablissements
             $table->timestamps();
         });
     }

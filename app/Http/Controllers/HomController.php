@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Stagiaire;
-use App\Models\Etablissement;
+use App\Models\Stage;
 use App\Models\Service;
+use App\Models\Stagiaire;
+use Illuminate\Http\Request;
+use App\Models\Etablissement;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class HomController extends Controller
 {
@@ -70,10 +70,12 @@ class HomController extends Controller
     // ✅ List all stagiaires
     public function list()
     {
-        $stagiaires = Stagiaire::all();
+        $stagiaires = Stagiaire::orderBy('nom', 'asc')->get();
         return view('list', compact('stagiaires'));
     }
+    
 
+    
     // ✅ Show edit page
     public function edit($id)
     {
@@ -136,73 +138,21 @@ class HomController extends Controller
     }
 
     // ✅ Delete stagiaire
-     public function destroy($id)
-     {
-         DB::beginTransaction();
-         try {
-             Log::info('Attempting to delete stagiaire with ID: ' . $id);
-     
-             // Find the stagiaire
-             $stagiaire = Stagiaire::find($id);
-             if (!$stagiaire) {
-                 Log::warning('Stagiaire not found with ID: ' . $id);
-                 return back()->with('error', 'Stagiaire not found.');
-             }
-     
-             // Get the associated service and etablissement IDs
-            //  $serviceId = $stagiaire->ID_service;
-             $etablissementId = $stagiaire->ID_etablissement;
-     
-             Log::info('Deleting stagiaire:', $stagiaire->toArray());
-     
-             // Delete the stagiaire
-             $stagiaire->delete();
-             Log::info('Stagiaire deleted successfully.');
-     
-             // Check if the service is not used by other stagiaires
-            //  if ($serviceId) {
-            //      $isServiceUsed = Stagiaire::where('ID_service', $serviceId)->exists();
-            //      Log::info('Service ID ' . $serviceId . ' is used by other stagiaires: ' . ($isServiceUsed ? 'Yes' : 'No'));
-     
-            //      if (!$isServiceUsed) {
-            //          $service = Service::find($serviceId);
-            //          if ($service) {
-            //              Log::info('Deleting service:', $service->toArray());
-            //              $service->delete();
-            //              Log::info('Service deleted successfully.');
-            //          }
-            //      }
-            //  }
-     
-             // Check if the etablissement is not used by other stagiaires
-             if ($etablissementId) {
-                 $isEtablissementUsed = Stagiaire::where('ID_etablissement', $etablissementId)->exists();
-                 Log::info('Etablissement ID ' . $etablissementId . ' is used by other stagiaires: ' . ($isEtablissementUsed ? 'Yes' : 'No'));
-     
-                 if (!$isEtablissementUsed) {
-                     $etablissement = Etablissement::find($etablissementId);
-                     if ($etablissement) {
-                         Log::info('Deleting etablissement:', $etablissement->toArray());
-                         $etablissement->delete();
-                         Log::info('Etablissement deleted successfully.');
-                     }
-                 }
-             }
-     
-             // Commit the transaction
-             DB::commit();
-             Log::info('Transaction committed successfully.');
-     
-             // Redirect with success message
-             return redirect()->route('list')->with('success', 'Stagiaire et établissement supprimés avec succès !');
-         } catch (\Exception $e) {
-             // Rollback the transaction on error
-             DB::rollBack();
-             Log::error('Error deleting stagiaire:', [
-                 'message' => $e->getMessage(),
-                 'trace' => $e->getTraceAsString(),
-             ]);
-             return back()->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
-         }
-     }
+    public function destroy($id)
+    {
+        // Check if the stagiaire is linked to any stage
+        $isRelated = Stage::where('id_stagiaire', $id)->exists();
+    
+        if ($isRelated) {
+            return redirect()->route('list')->with('error', 'Impossible de supprimer ce stagiaire car il est associé à un stage. Veuillez d\'abord supprimer le stage.');
+        }
+    
+        // Find the stagiaire by ID and delete it
+        $stagiaire = Stagiaire::findOrFail($id);
+        $stagiaire->delete();
+    
+        // Redirect back with a success message
+        return redirect()->route('list')->with('success', 'Stagiaire supprimé avec succès !');
+    }
+    
 }
