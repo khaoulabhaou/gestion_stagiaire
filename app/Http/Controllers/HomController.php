@@ -20,21 +20,32 @@ class HomController extends Controller
         return view('stagiaires.create', compact('services', 'selectedService'));
     }
 
-    // ✅ Store stagiaire with unique téléphone
+    // ✅ Store stagiaire with unique téléphone and email
     public function store(Request $request)
     {
         $validated = $request->validate([
             'nom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'prénom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
-            'email' => 'required|email|max:250',
+            'email' => 'required|email|max:250|unique:stagiaire,email',
             'téléphone' => 'required|regex:/^[0-9]{10}$/|unique:stagiaire,téléphone',
             'date_naissance' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
-            'nom_etablissement' => 'required|string|max:100',
-            'ville' => 'required|string|max:50',
-            'abréviation' => 'required|string|max:50',
+            'nom_etablissement' => 'required|string|max:100|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
+            'ville' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
+            'abréviation' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'niveau' => 'required|string|max:50',
             'specialite' => 'required|string|max:50',
             'ID_service' => 'required|exists:service,ID_service',
+        ], [
+            'nom.regex' => 'Le nom ne doit contenir que des lettres et des accents.',
+            'prénom.regex' => 'Le prénom ne doit contenir que des lettres et des accents.',
+            'email.email' => 'L\'adresse email n\'est pas valide.',
+            'email.unique' => 'L\'adresse email existe déjà.',
+            'téléphone.regex' => 'Le numéro de téléphone doit être un numéro valide à 10 chiffres.',
+            'téléphone.unique' => 'Le numéro de téléphone existe déjà.',
+            'date_naissance.before_or_equal' => 'Vous devez avoir au moins 18 ans.',
+            'nom_etablissement.regex' => 'Le nom de l\'établissement ne doit contenir que des lettres et des accents.',
+            'ville.regex' => 'La ville ne doit contenir que des lettres et des accents.',
+            'abréviation.regex' => 'L\'abréviation ne doit contenir que des lettres et des accents.',
         ]);
 
         DB::beginTransaction();
@@ -70,7 +81,7 @@ class HomController extends Controller
     {
         $stagiaires = Stagiaire::orderBy('nom', 'asc')->get();
         return view('list', compact('stagiaires'));
-    }  
+    }
 
     // ✅ Show edit page
     public function edit($id)
@@ -81,13 +92,13 @@ class HomController extends Controller
         return view('stagiaires.edit', compact('stagiaire', 'etablissements', 'services'));
     }
 
-    // ✅ Update stagiaire with unique téléphone
+    // ✅ Update stagiaire with unique téléphone and email
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'nom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'prénom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
-            'email' => 'required|email|max:250',
+            'email' => 'required|email|max:250|unique:stagiaire,email,' . $id . ',ID_stagiaire',
             'téléphone' => 'required|regex:/^[0-9]{10}$/|unique:stagiaire,téléphone,' . $id . ',ID_stagiaire',
             'date_naissance' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d') . '|after_or_equal:' . now()->subYears(100)->format('Y-m-d'),
             'niveau' => 'required|string|max:20',
@@ -97,6 +108,18 @@ class HomController extends Controller
             'nom_etablissement' => 'required|string|max:100|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'ville' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'abréviation' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
+        ], [
+            'nom.regex' => 'Le nom ne doit contenir que des lettres et des accents.',
+            'prénom.regex' => 'Le prénom ne doit contenir que des lettres et des accents.',
+            'email.email' => 'L\'adresse email n\'est pas valide.',
+            'email.unique' => 'L\'adresse email existe déjà.',
+            'téléphone.regex' => 'Le numéro de téléphone doit être un numéro valide à 10 chiffres.',
+            'téléphone.unique' => 'Le numéro de téléphone existe déjà.',
+            'date_naissance.before_or_equal' => 'Vous devez avoir au moins 18 ans.',
+            'specialite.regex' => 'La spécialité ne doit contenir que des lettres et des accents.',
+            'nom_etablissement.regex' => 'Le nom de l\'établissement ne doit contenir que des lettres et des accents.',
+            'ville.regex' => 'La ville ne doit contenir que des lettres et des accents.',
+            'abréviation.regex' => 'L\'abréviation ne doit contenir que des lettres et des accents.',
         ]);
 
         DB::beginTransaction();
