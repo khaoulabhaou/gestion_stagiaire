@@ -49,7 +49,7 @@ class StageController extends Controller
             'id_stagiaire' => $request->id_stagiaire,
         ]);
     
-        return redirect()->route('stages.create')->with('success', 'Stage ajouté avec succès !');
+        return redirect()->route('stages.index')->with('success', 'Stage ajouté avec succès !');
     }
     public function index()
     {

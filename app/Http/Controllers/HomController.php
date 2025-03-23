@@ -16,6 +16,7 @@ class HomController extends Controller
     {
         $services = Service::all();
         $selectedService = $request->input('ID_service');
+
         return view('stagiaires.create', compact('services', 'selectedService'));
         return view('stagiaires.edit', compact('services', 'selectedService'));
 
@@ -149,7 +150,7 @@ class HomController extends Controller
              }
      
              // Get the associated service and etablissement IDs
-             $serviceId = $stagiaire->ID_service;
+            //  $serviceId = $stagiaire->ID_service;
              $etablissementId = $stagiaire->ID_etablissement;
      
              Log::info('Deleting stagiaire:', $stagiaire->toArray());
@@ -159,19 +160,19 @@ class HomController extends Controller
              Log::info('Stagiaire deleted successfully.');
      
              // Check if the service is not used by other stagiaires
-             if ($serviceId) {
-                 $isServiceUsed = Stagiaire::where('ID_service', $serviceId)->exists();
-                 Log::info('Service ID ' . $serviceId . ' is used by other stagiaires: ' . ($isServiceUsed ? 'Yes' : 'No'));
+            //  if ($serviceId) {
+            //      $isServiceUsed = Stagiaire::where('ID_service', $serviceId)->exists();
+            //      Log::info('Service ID ' . $serviceId . ' is used by other stagiaires: ' . ($isServiceUsed ? 'Yes' : 'No'));
      
-                 if (!$isServiceUsed) {
-                     $service = Service::find($serviceId);
-                     if ($service) {
-                         Log::info('Deleting service:', $service->toArray());
-                         $service->delete();
-                         Log::info('Service deleted successfully.');
-                     }
-                 }
-             }
+            //      if (!$isServiceUsed) {
+            //          $service = Service::find($serviceId);
+            //          if ($service) {
+            //              Log::info('Deleting service:', $service->toArray());
+            //              $service->delete();
+            //              Log::info('Service deleted successfully.');
+            //          }
+            //      }
+            //  }
      
              // Check if the etablissement is not used by other stagiaires
              if ($etablissementId) {
@@ -193,7 +194,7 @@ class HomController extends Controller
              Log::info('Transaction committed successfully.');
      
              // Redirect with success message
-             return redirect()->route('list')->with('success', 'Stagiaire, service et établissement supprimés avec succès !');
+             return redirect()->route('list')->with('success', 'Stagiaire et établissement supprimés avec succès !');
          } catch (\Exception $e) {
              // Rollback the transaction on error
              DB::rollBack();

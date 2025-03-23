@@ -3,9 +3,9 @@
         <i class="bx bx-menu" id="header-toggle"></i>
     </div>
 
-    <div class="header_img">
+    {{-- <div class="header_img">
         <img src="https://scontent.fccu2-3.fna.fbcdn.net/v/t39.30808-6/373611637_2003925126646573_1171042221997763294_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=EAqcT2FLHl4AX91Pdji&_nc_ht=scontent.fccu2-3.fna&oh=00_AfBLAGK4oYl8MD_ntFjH1V_7R-cE4DAlF4ixUm0YzbjjXw&oe=653B84F0" alt="">
-    </div>
+    </div> --}}
 
     <!-- User Dropdown Menu on the Right -->
     <x-dropdown align="right" width="48">

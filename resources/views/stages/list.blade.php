@@ -1,10 +1,9 @@
 <x-app-layout>
-    <header style="margin-top:2.5rem">
+    <header style="margin-top: 2.5rem">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
     </header>
-    <div class="container">
-        <h2>Liste des Stages</h2>
 
+    <div class="container text-center">
         <!-- Display success message if any -->
         @if(session('success'))
             <div class="alert alert-success">
@@ -12,44 +11,59 @@
             </div>
         @endif
 
-        <!-- Bootstrap Table -->
-        <table class="table table-hover table-bordered mt-5">
-            <thead>
-                <tr>
-                    {{-- <th>ID</th> --}}
-                    <th>Titre</th>
-                    <th>Stagiaire</th>
-                    <th>Service</th>
-                    <th>Date de début</th>
-                    <th>Date de fin</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($stages as $stage)
-                    <tr>
-                        {{-- <td>{{ $stage->ID_stage }}</td> --}}
-                        <td>{{ $stage->titre }}</td>
-                        <td>{{ $stage->stagiaire->nom ?? 'N/A' }} {{ $stage->stagiaire->prénom ?? '' }}</td>
-                        <td>{{ $stage->service->nom_service ?? 'N/A' }}</td>
-                        <td>{{ $stage->date_début }}</td>
-                        <td>{{ $stage->date_fin }}</td>
-                        <td>{{ $stage->description }}</td>
-                        <td>
-                            <!-- Edit Button -->
-                            <a href="{{ route('stages.edit', $stage->ID_stage) }}" class="btn btn-sm" style="background-color: #f6b83d">Edit</a>
+        {{-- <h2 class="mt-4 mb-4">Liste des Stages</h2> --}}
 
-                            <!-- Delete Button -->
-                            <form action="{{ route('stages.destroy', $stage->ID_stage) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce stage ?')">Delete</button>
-                            </form>
-                        </td>
+        <!-- Button to add a new stagiaire -->
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{{ route('stages.create') }}" class="btn btn-success" style="margin-right: 7px">
+                <i class="fa-solid fa-user-plus"></i>
+            </a>
+        </div>
+
+        <!-- Bootstrap Table -->
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="table-success">
+                    <tr>
+                        <th class="text-center">Titre</th>
+                        <th class="text-center">Stagiaire</th>
+                        <th class="text-center">Service</th>
+                        <th class="text-center">Date de début</th>
+                        <th class="text-center">Date de fin</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Actions</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($stages as $stage)
+                        <tr>
+                            <td class="align-middle">{{ $stage->titre }}</td>
+                            <td class="align-middle">{{ $stage->stagiaire->nom ?? 'N/A' }} {{ $stage->stagiaire->prénom ?? '' }}</td>
+                            <td class="align-middle">{{ $stage->service->nom_service ?? 'N/A' }}</td>
+                            <td class="align-middle">{{ $stage->date_début }}</td>
+                            <td class="align-middle">{{ $stage->date_fin }}</td>
+                            <td class="align-middle">{{ $stage->description }}</td>
+                            <td class="align-middle">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <!-- Edit Button -->
+                                    <a href="{{ route('stages.edit', $stage->ID_stage) }}" class="btn btn-warning btn-sm">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+
+                                    <!-- Delete Button -->
+                                    <form action="{{ route('stages.destroy', $stage->ID_stage) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce stage ?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </x-app-layout>
