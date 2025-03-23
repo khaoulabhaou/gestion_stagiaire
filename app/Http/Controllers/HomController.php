@@ -7,6 +7,7 @@ use App\Models\Stagiaire;
 use App\Models\Etablissement;
 use App\Models\Service;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class HomController extends Controller
 {
@@ -16,6 +17,8 @@ class HomController extends Controller
         $services = Service::all();
         $selectedService = $request->input('ID_service');
         return view('stagiaires.create', compact('services', 'selectedService'));
+        return view('stagiaires.edit', compact('services', 'selectedService'));
+
     }
 
     // ✅ Store stagiaire with establishment and service
@@ -30,7 +33,7 @@ class HomController extends Controller
             'nom_etablissement' => 'required|string|max:100',
             'ville' => 'required|string|max:50',
             'abréviation' => 'required|string|max:50',
-            'niveau' => 'required|string|max:20',
+            'niveau' => 'required|string|max:50',
             'specialite' => 'required|string|max:50',
             'ID_service' => 'required|exists:service,ID_service',
         ]);
@@ -56,7 +59,7 @@ class HomController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('stagiaires.index')->with('success', 'Stagiaire ajouté avec succès !');
+            return redirect()->route('list')->with('success', 'Stagiaire ajouté avec succès !');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Erreur lors de l\'ajout du stagiaire.');
@@ -64,10 +67,10 @@ class HomController extends Controller
     }
 
     // ✅ List all stagiaires
-    public function index()
+    public function list()
     {
         $stagiaires = Stagiaire::all();
-        return view('stagiaires.index', compact('stagiaires'));
+        return view('list', compact('stagiaires'));
     }
 
     // ✅ Show edit page
@@ -90,16 +93,16 @@ class HomController extends Controller
             'date_naissance' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d') . '|after_or_equal:' . now()->subYears(100)->format('Y-m-d'),
             'niveau' => 'required|string|max:20',
             'specialite' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
-            'ID_etablissement' => 'required|integer',
+            'ID_etablissement' => 'required|integer|exists:etablissement,ID_etablissement',
+            'ID_service' => 'required|integer|exists:service,ID_service',
             'nom_etablissement' => 'required|string|max:100|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'ville' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
             'abréviation' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
-            'ID_service' => 'required|integer',
-            'nom_service' => 'string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
         ]);
-
+    
         DB::beginTransaction();
         try {
+            // Update or create the establishment
             $etablissement = Etablissement::find($validated['ID_etablissement']);
             if ($etablissement) {
                 $etablissement->update([
@@ -108,14 +111,8 @@ class HomController extends Controller
                     'abréviation' => $validated['abréviation'],
                 ]);
             }
-
-            $service = Service::find($validated['ID_service']);
-            if ($service) {
-                $service->update([
-                    'nom_service' => $validated['nom_service'],
-                ]);
-            }
-
+    
+            // Update the stagiaire
             $stagiaire = Stagiaire::findOrFail($id);
             $stagiaire->update([
                 'nom' => $validated['nom'],
@@ -128,10 +125,9 @@ class HomController extends Controller
                 'ID_etablissement' => $validated['ID_etablissement'],
                 'ID_service' => $validated['ID_service'],
             ]);
-
+    
             DB::commit();
-
-            return redirect()->route('stagiaires.index')->with('success', 'Stagiaire, service et établissement mis à jour avec succès !');
+            return redirect()->route('list')->with('success', 'Stagiaire mis à jour avec succès !');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Erreur lors de la mise à jour : ' . $e->getMessage());
@@ -139,39 +135,73 @@ class HomController extends Controller
     }
 
     // ✅ Delete stagiaire
-    public function destroy($id)
-    {
-        DB::beginTransaction();
-        try {
-            $stagiaire = Stagiaire::find($id);
-            if (!$stagiaire) {
-                return back()->with('error', 'Stagiaire not found.');
-            }
-
-            $serviceId = $stagiaire->ID_service;
-            $etablissementId = $stagiaire->ID_etablissement;
-
-            $stagiaire->delete();
-
-            if ($serviceId) {
-                $service = Service::find($serviceId);
-                if ($service) {
-                    $service->delete();
-                }
-            }
-
-            if ($etablissementId) {
-                $etablissement = Etablissement::find($etablissementId);
-                if ($etablissement) {
-                    $etablissement->delete();
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('stagiaires.index')->with('success', 'Stagiaire, service et établissement supprimés avec succès !');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Erreur: ' . $e->getMessage());
-        }
-    }
+     public function destroy($id)
+     {
+         DB::beginTransaction();
+         try {
+             Log::info('Attempting to delete stagiaire with ID: ' . $id);
+     
+             // Find the stagiaire
+             $stagiaire = Stagiaire::find($id);
+             if (!$stagiaire) {
+                 Log::warning('Stagiaire not found with ID: ' . $id);
+                 return back()->with('error', 'Stagiaire not found.');
+             }
+     
+             // Get the associated service and etablissement IDs
+             $serviceId = $stagiaire->ID_service;
+             $etablissementId = $stagiaire->ID_etablissement;
+     
+             Log::info('Deleting stagiaire:', $stagiaire->toArray());
+     
+             // Delete the stagiaire
+             $stagiaire->delete();
+             Log::info('Stagiaire deleted successfully.');
+     
+             // Check if the service is not used by other stagiaires
+             if ($serviceId) {
+                 $isServiceUsed = Stagiaire::where('ID_service', $serviceId)->exists();
+                 Log::info('Service ID ' . $serviceId . ' is used by other stagiaires: ' . ($isServiceUsed ? 'Yes' : 'No'));
+     
+                 if (!$isServiceUsed) {
+                     $service = Service::find($serviceId);
+                     if ($service) {
+                         Log::info('Deleting service:', $service->toArray());
+                         $service->delete();
+                         Log::info('Service deleted successfully.');
+                     }
+                 }
+             }
+     
+             // Check if the etablissement is not used by other stagiaires
+             if ($etablissementId) {
+                 $isEtablissementUsed = Stagiaire::where('ID_etablissement', $etablissementId)->exists();
+                 Log::info('Etablissement ID ' . $etablissementId . ' is used by other stagiaires: ' . ($isEtablissementUsed ? 'Yes' : 'No'));
+     
+                 if (!$isEtablissementUsed) {
+                     $etablissement = Etablissement::find($etablissementId);
+                     if ($etablissement) {
+                         Log::info('Deleting etablissement:', $etablissement->toArray());
+                         $etablissement->delete();
+                         Log::info('Etablissement deleted successfully.');
+                     }
+                 }
+             }
+     
+             // Commit the transaction
+             DB::commit();
+             Log::info('Transaction committed successfully.');
+     
+             // Redirect with success message
+             return redirect()->route('list')->with('success', 'Stagiaire, service et établissement supprimés avec succès !');
+         } catch (\Exception $e) {
+             // Rollback the transaction on error
+             DB::rollBack();
+             Log::error('Error deleting stagiaire:', [
+                 'message' => $e->getMessage(),
+                 'trace' => $e->getTraceAsString(),
+             ]);
+             return back()->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+         }
+     }
 }

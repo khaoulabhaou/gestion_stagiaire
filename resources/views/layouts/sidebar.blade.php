@@ -62,8 +62,8 @@
                     </div>
                     <div class="dropdown-content">
                         <a href="{{ route('stagiaires.create') }}">Ajouter Stagiaire</a>
-                        <a href="{{ route('stagiaires.index') }}">List de Stagiaires</a>
-                        <a href="{{ route('stagiaires.archive') }}">Archive</a>
+                        <a href="{{ route('list') }}">List de Stagiaires</a>
+                        {{-- <a href="{{ route('stagiaires.archive') }}">Archive</a> --}}
                     </div>
                 </div>
                 <!-- Encadrants Dropdown -->
