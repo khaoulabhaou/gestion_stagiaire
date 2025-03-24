@@ -4,82 +4,112 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Encadrant;
+use App\Models\Service;
+use Illuminate\Support\Facades\Log;
 
 class EncadrantController extends Controller
 {
-    /**
-     * Afficher la liste des encadrants.
-     */
     public function index()
     {
         $encadrants = Encadrant::orderBy('created_at', 'DESC')->get();
-        return view('encadrants.index', compact('encadrants')); // Affiche la vue list.blade.php
+        return view('encadrants.list', compact('encadrants'));
     }
 
-    /**
-     * Afficher le formulaire d'ajout d'un encadrant.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        return view('encadrants.create');
+        $services = Service::all();
+        $selectedService = $request->input('ID_service');
+
+        return view('encadrants.create', compact('services', 'selectedService'));
     }
 
-    /**
-     * Enregistrer un nouvel encadrant.
-     */
     public function store(Request $request)
     {
-        Encadrant::create($request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'nom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
+            'prénom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|email|unique:encadrants,email',
-        ]));
+            'ID_service' => 'required|exists:service,ID_service',
+        ], [
+            'nom.required' => 'Le nom est requis.',
+            'nom.regex' => 'Le nom ne doit contenir que des lettres, des espaces et des tirets.',
+            'prénom.required' => 'Le prénom est requis.',
+            'prénom.regex' => 'Le prénom ne doit contenir que des lettres, des espaces et des tirets.',
+            'email.required' => 'L\'email est requis.',
+            'email.email' => 'L\'email doit être valide.',
+            'email.unique' => 'L\'email est déjà utilisé.',
+            'ID_service.required' => 'Le service est requis.',
+            'ID_service.exists' => 'Le service sélectionné est invalide.',
+        ]);
 
-        return redirect()->route('encadrants.index')->with('success', 'Encadrant ajouté avec succès.');
+        Log::info('Creating encadrant with data:', $validatedData);
+
+        $encadrant = Encadrant::create($validatedData);
+
+        Log::info('Encadrant created:', ['encadrant' => $encadrant]);
+
+        return redirect()->route('encadrants.list')->with('success', 'Encadrant ajouté avec succès.');
     }
 
-    /**
-     * Afficher un encadrant spécifique.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
+        Log::info('Editing encadrant with ID:', ['id' => $id]);
+
         $encadrant = Encadrant::findOrFail($id);
-        return view('encadrants.show', compact('encadrant'));
+
+        Log::info('Retrieved encadrant:', ['encadrant' => $encadrant]);
+
+        $services = Service::all();
+
+        return view('encadrants.edit', compact('encadrant', 'services'));
     }
 
-    /**
-     * Afficher le formulaire de modification d'un encadrant.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        $encadrant = Encadrant::findOrFail($id);
-        return view('encadrants.edit', compact('encadrant'));
-    }
+        Log::info('Updating encadrant with ID:', ['id' => $id]);
 
-    /**
-     * Mettre à jour un encadrant.
-     */
-    public function update(Request $request, string $id)
-    {
         $encadrant = Encadrant::findOrFail($id);
 
-        $encadrant->update($request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
+        Log::info('Retrieved encadrant for update:', ['encadrant' => $encadrant]);
+
+        $validatedData = $request->validate([
+            'nom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
+            'prénom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|email|unique:encadrants,email,' . $id,
-        ]));
+            'ID_service' => 'required|exists:service,ID_service',
+        ], [
+            'nom.required' => 'Le nom est requis.',
+            'nom.regex' => 'Le nom ne doit contenir que des lettres, des espaces et des tirets.',
+            'prénom.required' => 'Le prénom est requis.',
+            'prénom.regex' => 'Le prénom ne doit contenir que des lettres, des espaces et des tirets.',
+            'email.required' => 'L\'email est requis.',
+            'email.email' => 'L\'email doit être valide.',
+            'email.unique' => 'L\'email est déjà utilisé.',
+            'ID_service.required' => 'Le service est requis.',
+            'ID_service.exists' => 'Le service sélectionné est invalide.',
+        ]);
 
-        return redirect()->route('encadrants.index')->with('success', 'Encadrant mis à jour avec succès.');
+        Log::info('Updating encadrant with data:', $validatedData);
+
+        $encadrant->update($validatedData);
+
+        Log::info('Encadrant updated:', ['encadrant' => $encadrant]);
+
+        return redirect()->route('encadrants.list')->with('success', 'Encadrant mis à jour avec succès.');
     }
 
-    /**
-     * Supprimer un encadrant.
-     */
-    public function destroy(string $id)
-    {   
+    public function destroy($id)
+    {
+        Log::info('Deleting encadrant with ID:', ['id' => $id]);
+
         $encadrant = Encadrant::findOrFail($id);
+
+        Log::info('Retrieved encadrant for deletion:', ['encadrant' => $encadrant]);
+
         $encadrant->delete();
 
-        return redirect()->route('encadrants.index')->with('success', 'Encadrant supprimé avec succès.');
+        Log::info('Encadrant deleted:', ['encadrant' => $encadrant]);
+
+        return redirect()->route('encadrants.list')->with('success', 'Encadrant supprimé avec succès.');
     }
 }

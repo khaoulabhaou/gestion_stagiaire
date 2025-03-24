@@ -73,8 +73,8 @@
                         <span>Encadrants</span>
                     </div>
                     <div class="dropdown-content">
-                        <a href="#">Ajouter Encadrant</a>
-                        <a href="#">List d'Encadrant</a>
+                        <a href="{{ route('encadrants.create') }}">Ajouter Encadrant</a>
+                        <a href="{{ route('encadrants.list') }}">List d'Encadrant</a>
                     </div>
                 </div>
                 <!-- Stages Dropdown -->

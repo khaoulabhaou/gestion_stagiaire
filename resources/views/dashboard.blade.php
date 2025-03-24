@@ -29,7 +29,7 @@
                         <i class="fas fa-user-tie fa-3x mb-3 text-success"></i>
                         <h5 class="card-title">Ajouter Encadrant</h5>
                         <p class="card-text">Ajoutez un nouvel encadrant à la plateforme.</p>
-                        <a href="#" class="btn btn-success">Accéder</a>
+                        <a href="{{ route('encadrants.create') }}" class="btn btn-success">Accéder</a>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                     <div class="card-body text-center">
                         <i class="fas fa-user-tie fa-3x mb-3 text-secondary"></i>
                         <h5 class="card-title">Encadrants</h5>
-                        <p class="card-text">Total : {{-- {{ $encadrantsCount }} --}}
+                        <p class="card-text">Total : {{ $encadrantsCount }}
                         </p>
                     </div>
                 </div>
