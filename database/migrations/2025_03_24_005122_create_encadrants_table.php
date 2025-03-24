@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('encadrants', function (Blueprint $table) {
-            $table->id('ID_encadrants'); // Custom primary key column name
+            $table->id('id'); // Custom primary key column name
             $table->string('nom', 100)->nullable(); // Matches your current schema
             $table->string('prénom', 100)->nullable(); // Matches your current schema
             $table->string('email', 100)->nullable(); // Matches your current schema

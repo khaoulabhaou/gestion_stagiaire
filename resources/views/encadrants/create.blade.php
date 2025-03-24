@@ -51,7 +51,7 @@
                             <select name="ID_service" id="ID_service" class="form-control" required>
                                 <option value="">Sélectionner un service</option>
                                 @foreach($services as $service)
-                                    <option value="{{ $service->ID_service }}">
+                                    <option value="{{ $service->ID_service }}" {{ $selectedService == $service->ID_service ? 'selected' : '' }}>
                                         {{ $service->nom_service }}
                                     </option>
                                 @endforeach

@@ -36,11 +36,11 @@
                             <td class="text-center align-middle">{{ optional($encadrant->service)->nom_service }}</td>
                             <td class="align-middle">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('encadrants.edit', $encadrant->ID_encadrants) }}" class="btn btn-warning btn-sm">
+                                    <a href="{{ route('encadrants.edit', $encadrant->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
 
-                                    <form action="{{ route('encadrants.destroy', $encadrant->ID_encadrants) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet encadrant ?')">
+                                    <form action="{{ route('encadrants.destroy', $encadrant->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet encadrant ?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">

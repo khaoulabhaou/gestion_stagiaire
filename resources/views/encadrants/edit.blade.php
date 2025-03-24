@@ -27,7 +27,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('encadrants.update', $encadrant->ID_encadrants) }}" method="POST">
+                <form action="{{ route('encadrants.update', $encadrant->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
