@@ -37,8 +37,8 @@
                             <input type="text" name="nom" id="nom" class="form-control" value="{{ old('nom', $encadrant->nom) }}" required>
                         </div>
                         <div class="col-md-4">
-                            <label for="prénom" class="form-label">Prénom</label>
-                            <input type="text" name="prénom" id="prénom" class="form-control" value="{{ old('prénom', $encadrant->prénom) }}" required>
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input type="text" name="prenom" id="prenom" class="form-control" value="{{ old('prenom', $encadrant->prenom) }}" required>
                         </div>
                         <div class="col-md-4">
                             <label for="email" class="form-label">Email</label>

@@ -12,6 +12,7 @@ class EncadrantController extends Controller
     public function index()
     {
         $encadrants = Encadrant::orderBy('created_at', 'DESC')->get();
+        // @dd($encadrants); 
         return view('encadrants.list', compact('encadrants'));
     }
 
@@ -25,16 +26,19 @@ class EncadrantController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
+        // dd($request->ID_service, gettype($request->ID_service));
+
         $validatedData = $request->validate([
             'nom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
-            'prénom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
+            'prenom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|email|unique:encadrants,email',
             'ID_service' => 'required|exists:service,ID_service',
         ], [
             'nom.required' => 'Le nom est requis.',
             'nom.regex' => 'Le nom ne doit contenir que des lettres, des espaces et des tirets.',
-            'prénom.required' => 'Le prénom est requis.',
-            'prénom.regex' => 'Le prénom ne doit contenir que des lettres, des espaces et des tirets.',
+            'prenom.required' => 'Le prenom est requis.',
+            'prenom.regex' => 'Le prenom ne doit contenir que des lettres, des espaces et des tirets.',
             'email.required' => 'L\'email est requis.',
             'email.email' => 'L\'email doit être valide.',
             'email.unique' => 'L\'email est déjà utilisé.',
@@ -74,14 +78,14 @@ class EncadrantController extends Controller
 
         $validatedData = $request->validate([
             'nom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
-            'prénom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
+            'prenom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|email|unique:encadrants,email,' . $id,
             'ID_service' => 'required|exists:service,ID_service',
         ], [
             'nom.required' => 'Le nom est requis.',
             'nom.regex' => 'Le nom ne doit contenir que des lettres, des espaces et des tirets.',
-            'prénom.required' => 'Le prénom est requis.',
-            'prénom.regex' => 'Le prénom ne doit contenir que des lettres, des espaces et des tirets.',
+            'prenom.required' => 'Le prenom est requis.',
+            'prenom.regex' => 'Le prenom ne doit contenir que des lettres, des espaces et des tirets.',
             'email.required' => 'L\'email est requis.',
             'email.email' => 'L\'email doit être valide.',
             'email.unique' => 'L\'email est déjà utilisé.',

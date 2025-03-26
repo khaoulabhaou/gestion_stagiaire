@@ -36,8 +36,8 @@
                             <input type="text" name="nom" id="nom" class="form-control" required>
                         </div>
                         <div class="col-md-4">
-                            <label for="prénom" class="form-label">Prénom</label>
-                            <input type="text" name="prénom" id="prénom" class="form-control" required>
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input type="text" name="prenom" id="prenom" class="form-control" required>
                         </div>
                         <div class="col-md-4">
                             <label for="email" class="form-label">Email</label>
@@ -51,7 +51,7 @@
                             <select name="ID_service" id="ID_service" class="form-control" required>
                                 <option value="">Sélectionner un service</option>
                                 @foreach($services as $service)
-                                    <option value="{{ $service->ID_service }}" {{ $selectedService == $service->ID_service ? 'selected' : '' }}>
+                                    <option value="{{ (int)$service->ID_service }}" {{ $selectedService == $service->ID_service ? 'selected' : '' }}>
                                         {{ $service->nom_service }}
                                     </option>
                                 @endforeach

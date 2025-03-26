@@ -31,7 +31,7 @@
                     @foreach($encadrants as $encadrant)
                         <tr>
                             <td class="align-middle">{{ $encadrant->nom }}</td>
-                            <td class="align-middle">{{ $encadrant->prénom }}</td>
+                            <td class="align-middle">{{ $encadrant->prenom }}</td>
                             <td class="align-middle">{{ $encadrant->email }}</td>
                             <td class="text-center align-middle">{{ optional($encadrant->service)->nom_service }}</td>
                             <td class="align-middle">

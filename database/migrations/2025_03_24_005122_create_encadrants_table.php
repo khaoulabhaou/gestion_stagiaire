@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('encadrants', function (Blueprint $table) {
             $table->id('id'); // Custom primary key column name
             $table->string('nom', 100)->nullable(); // Matches your current schema
-            $table->string('prénom', 100)->nullable(); // Matches your current schema
+            $table->string('prenom', 100)->nullable(); // Matches your current schema
             $table->string('email', 100)->nullable(); // Matches your current schema
             $table->foreignId('ID_service')->nullable()->constrained('service', 'ID_service'); // Foreign key to services table
             $table->timestamps(); // Adds created_at and updated_at columns
