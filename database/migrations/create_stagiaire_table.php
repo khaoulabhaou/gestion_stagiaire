@@ -29,5 +29,3 @@ class CreatestagiaireTable extends Migration
     }
 
 }
-
-
