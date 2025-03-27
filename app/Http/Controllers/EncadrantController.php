@@ -26,33 +26,20 @@ class EncadrantController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        // dd($request->ID_service, gettype($request->ID_service));
-
         $validatedData = $request->validate([
-            'nom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
-            'prenom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
             'email' => 'required|email|unique:encadrants,email',
-            'ID_service' => 'required|exists:service,ID_service',
-        ], [
-            'nom.required' => 'Le nom est requis.',
-            'nom.regex' => 'Le nom ne doit contenir que des lettres, des espaces et des tirets.',
-            'prenom.required' => 'Le prenom est requis.',
-            'prenom.regex' => 'Le prenom ne doit contenir que des lettres, des espaces et des tirets.',
-            'email.required' => 'L\'email est requis.',
-            'email.email' => 'L\'email doit être valide.',
-            'email.unique' => 'L\'email est déjà utilisé.',
-            'ID_service.required' => 'Le service est requis.',
-            'ID_service.exists' => 'Le service sélectionné est invalide.',
+            'ID_service' => 'required|numeric|exists:service,ID_service',
         ]);
-
-        Log::info('Creating encadrant with data:', $validatedData);
-
-        $encadrant = Encadrant::create($validatedData);
-
-        Log::info('Encadrant created:', ['encadrant' => $encadrant]);
-
-        return redirect()->route('encadrants.list')->with('success', 'Encadrant ajouté avec succès.');
+    
+        // Force non-null service ID
+        if (empty($validatedData['ID_service'])) {
+            return back()->withErrors(['ID_service' => 'Service is required.']);
+        }
+    
+        Encadrant::create($validatedData);
+        return redirect()->route('encadrants.list')->with('success', 'Encadrant added!');
     }
 
     public function edit($id)
