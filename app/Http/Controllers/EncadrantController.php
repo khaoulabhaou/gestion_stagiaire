@@ -11,8 +11,8 @@ class EncadrantController extends Controller
 {
     public function index()
     {
-        $encadrants = Encadrant::orderBy('created_at', 'DESC')->get();
-        // @dd($encadrants); 
+        // Eager load the service relationship to avoid N+1 query problem
+        $encadrants = Encadrant::with('service')->orderBy('created_at', 'DESC')->get();
         return view('encadrants.list', compact('encadrants'));
     }
 
@@ -26,31 +26,41 @@ class EncadrantController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validatedData = $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
+            'nom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
+            'prenom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|email|unique:encadrants,email',
             'ID_service' => 'required|numeric|exists:service,ID_service',
+        ], [
+            'nom.required' => 'Le nom est requis.',
+            'nom.regex' => 'Le nom ne doit contenir que des lettres, des espaces et des tirets.',
+            'nom.max' => 'Le nom ne doit pas dépasser 255 caractères.',
+            'prenom.required' => 'Le prénom est requis.',
+            'prenom.regex' => 'Le prénom ne doit contenir que des lettres, des espaces et des tirets.',
+            'prenom.max' => 'Le prénom ne doit pas dépasser 255 caractères.',
+            'email.required' => 'L\'email est requis.',
+            'email.email' => 'L\'email doit être valide (exemple: exemple@email.com).',
+            'email.unique' => 'L\'email est déjà utilisé par un autre encadrant.',
+            'ID_service.required' => 'Le service est requis.',
+            'ID_service.numeric' => 'Le service sélectionné doit être un nombre valide.',
+            'ID_service.exists' => 'Le service sélectionné est invalide.',
         ]);
-    
-        // Force non-null service ID
-        if (empty($validatedData['ID_service'])) {
-            return back()->withErrors(['ID_service' => 'Service is required.']);
-        }
-    
-        Encadrant::create($validatedData);
-        return redirect()->route('encadrants.list')->with('success', 'Encadrant added!');
+
+        Encadrant::create([
+            'nom' => $validatedData['nom'],
+            'prenom' => $validatedData['prenom'],
+            'email' => $validatedData['email'],
+            'ID_service' => (int)$validatedData['ID_service'],
+        ]);
+
+        return redirect()->route('encadrants.list')->with('success', 'Encadrant ajouté avec succès!');
     }
 
     public function edit($id)
     {
         Log::info('Editing encadrant with ID:', ['id' => $id]);
 
-        $encadrant = Encadrant::findOrFail($id);
-
-        Log::info('Retrieved encadrant:', ['encadrant' => $encadrant]);
-
+        $encadrant = Encadrant::with('service')->findOrFail($id);
         $services = Service::all();
 
         return view('encadrants.edit', compact('encadrant', 'services'));
@@ -62,8 +72,6 @@ class EncadrantController extends Controller
 
         $encadrant = Encadrant::findOrFail($id);
 
-        Log::info('Retrieved encadrant for update:', ['encadrant' => $encadrant]);
-
         $validatedData = $request->validate([
             'nom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
             'prenom' => 'required|string|max:255|regex:/^[\pL\s\-]+$/u',
@@ -72,20 +80,18 @@ class EncadrantController extends Controller
         ], [
             'nom.required' => 'Le nom est requis.',
             'nom.regex' => 'Le nom ne doit contenir que des lettres, des espaces et des tirets.',
-            'prenom.required' => 'Le prenom est requis.',
-            'prenom.regex' => 'Le prenom ne doit contenir que des lettres, des espaces et des tirets.',
+            'nom.max' => 'Le nom ne doit pas dépasser 255 caractères.',
+            'prenom.required' => 'Le prénom est requis.',
+            'prenom.regex' => 'Le prénom ne doit contenir que des lettres, des espaces et des tirets.',
+            'prenom.max' => 'Le prénom ne doit pas dépasser 255 caractères.',
             'email.required' => 'L\'email est requis.',
-            'email.email' => 'L\'email doit être valide.',
-            'email.unique' => 'L\'email est déjà utilisé.',
+            'email.email' => 'L\'email doit être valide (exemple: exemple@email.com).',
+            'email.unique' => 'L\'email est déjà utilisé par un autre encadrant.',
             'ID_service.required' => 'Le service est requis.',
             'ID_service.exists' => 'Le service sélectionné est invalide.',
         ]);
 
-        Log::info('Updating encadrant with data:', $validatedData);
-
         $encadrant->update($validatedData);
-
-        Log::info('Encadrant updated:', ['encadrant' => $encadrant]);
 
         return redirect()->route('encadrants.list')->with('success', 'Encadrant mis à jour avec succès.');
     }
@@ -95,12 +101,7 @@ class EncadrantController extends Controller
         Log::info('Deleting encadrant with ID:', ['id' => $id]);
 
         $encadrant = Encadrant::findOrFail($id);
-
-        Log::info('Retrieved encadrant for deletion:', ['encadrant' => $encadrant]);
-
         $encadrant->delete();
-
-        Log::info('Encadrant deleted:', ['encadrant' => $encadrant]);
 
         return redirect()->route('encadrants.list')->with('success', 'Encadrant supprimé avec succès.');
     }

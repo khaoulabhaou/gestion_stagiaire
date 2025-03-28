@@ -104,6 +104,7 @@ Route::get('/stages/{id}/edit', [StageController::class, 'edit'])->name('stages.
 Route::put('/stages/{id}', [StageController::class, 'update'])->name('stages.update');
 Route::delete('/stages/{id}', [StageController::class, 'destroy'])->name('stages.destroy');
 
+
 //stagiaire routes
 Route::get('/stagiaires', [HomController::class, 'create'])->name('stagiaires.create');
 Route::post('/stagiaires/store', [HomController::class, 'store'])->name('stagiaires.store');
@@ -112,6 +113,7 @@ Route::get('/list', [HomController::class, 'list'])->name('list');
 Route::get('/stagiaires/{id}/edit', [HomController::class, 'edit'])->name('stagiaires.edit');
 Route::put('/stagiaires/{id}/update', [HomController::class, 'update'])->name('stagiaires.update');
 Route::delete('/stagiaires/{id}', [HomController::class, 'destroy'])->name('stagiaires.destroy');
+Route::get('/archive', [HomController::class, 'archive'])->name('archive');
 
 // Encadrant Routes
 Route::get('/encadrants', [EncadrantController::class, 'index'])->name('encadrants.list');

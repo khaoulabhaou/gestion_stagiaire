@@ -33,7 +33,7 @@
                             <td class="align-middle">{{ $encadrant->nom }}</td>
                             <td class="align-middle">{{ $encadrant->prenom }}</td>
                             <td class="align-middle">{{ $encadrant->email }}</td>
-                            <td class="text-center align-middle">{{ optional($encadrant->service)->nom_service }}</td>
+                            <td class="text-center align-middle">{{ $encadrant->service->nom_service}}</td>
                             <td class="align-middle">
                                 <div class="d-flex justify-content-center gap-2">
                                     <a href="{{ route('encadrants.edit', $encadrant->id) }}" class="btn btn-warning btn-sm">

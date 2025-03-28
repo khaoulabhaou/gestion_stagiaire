@@ -41,6 +41,10 @@ class Stagiaire extends Model
     {
         return $this->belongsTo(Service::class, 'ID_service'); 
     }
+    public function stages()
+    {
+        return $this->hasMany(Stage::class, 'id_stagiaire', 'ID_stagiaire');
+    }
     
 
     // Example: Archived scope (uncomment if needed)

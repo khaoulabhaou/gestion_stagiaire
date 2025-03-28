@@ -9,7 +9,22 @@ class Encadrant extends Model
 {
     use HasFactory;
 
-    protected $table = 'encadrants'; // Assure-toi que cela correspond au nom de ta table
+    protected $table = 'encadrants';
+    protected $fillable = ['nom', 'prenom', 'email', 'ID_service'];
+    
+    // Add this relationship
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'ID_service', 'ID_service');
+    }
+    public function stages()
+    {
+        return $this->belongsToMany(
+            Stage::class,              // Related model
+            'encadrant_stagiaire',     // Pivot table name
+            'ID_encadrants',           // Foreign key on pivot table referencing encadrants
+            'ID_stagiaire'             // Foreign key on pivot table referencing stages
+        );
+    } 
 
-    protected $fillable = ['nom', 'prenom', 'email']; // Ajoute les colonnes autorisées
 }

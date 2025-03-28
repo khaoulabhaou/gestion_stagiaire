@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\Stagiaire;
 use Illuminate\Http\Request;
 use App\Models\Etablissement;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HomController extends Controller
@@ -170,5 +171,17 @@ class HomController extends Controller
 
         // Redirect back with a success message
         return redirect()->route('list')->with('success', 'Stagiaire supprimé avec succès !');
+    }
+    public function archive()
+    {
+        $currentDate = Carbon::now()->toDateString();
+        
+        $archivedStagiaires = Stagiaire::with(['stages.encadrants', 'service', 'etablissement'])
+            ->whereHas('stages', function($query) use ($currentDate) {
+                $query->where('date_fin', '<', $currentDate);
+            })
+            ->get();
+            
+        return view('archive', compact('archivedStagiaires'));
     }
 }

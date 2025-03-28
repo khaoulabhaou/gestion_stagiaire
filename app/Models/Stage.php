@@ -9,11 +9,9 @@ class Stage extends Model
 {
     use HasFactory;
 
-    protected $table = 'stages'; // Table name
-
-    protected $primaryKey = 'ID_stage'; // Primary key
-
-    public $timestamps = false; // Disable timestamps if not using created_at & updated_at
+    protected $table = 'stages';
+    protected $primaryKey = 'ID_stage';
+    public $timestamps = false;
 
     protected $fillable = [
         'titre',
@@ -24,7 +22,18 @@ class Stage extends Model
         'id_stagiaire',
     ];
 
-    // Relationship with Service
+    // For Laravel 7 and below (deprecated in later versions)
+    protected $dates = [
+        'date_début',
+        'date_fin',
+    ];
+
+    // For Laravel 8+ (recommended)
+    protected $casts = [
+        'date_début' => 'datetime:Y-m-d',
+        'date_fin' => 'datetime:Y-m-d',
+    ];
+
     public function service()
     {
         return $this->belongsTo(Service::class, 'ID_service');
@@ -33,6 +42,15 @@ class Stage extends Model
     public function stagiaire()
     {
         return $this->belongsTo(Stagiaire::class, 'id_stagiaire', 'ID_stagiaire');
-    }    
+    }
 
+    public function encadrants()
+    {
+        return $this->belongsToMany(
+            Encadrant::class,
+            'encadrant_stagiaire',
+            'ID_stagiaire',
+            'ID_encadrants'
+        );
+    }
 }

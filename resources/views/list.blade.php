@@ -71,7 +71,7 @@
 
     <script>
         function testDelete() {
-            return confirm("Are you sure you want to delete?");
+            return confirm("Êtes-vous sûr de vouloir supprimer?");
         }
     </script>
     </body>
