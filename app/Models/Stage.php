@@ -38,7 +38,7 @@ class Stage extends Model
             Encadrant::class, 
             'responsable_stages', 
             'ID_stage', 
-            'ID_encadrants'
+            'ID_encadrants',
         );
     }
     

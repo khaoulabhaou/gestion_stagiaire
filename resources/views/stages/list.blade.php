@@ -25,10 +25,10 @@
                     <tr>
                         <th class="text-center">Titre</th>
                         <th class="text-center">Stagiaire</th>
+                        <th class="text-center">Encadrant</th>
                         <th class="text-center">Service</th>
                         <th class="text-center">Date de début</th>
                         <th class="text-center">Date de fin</th>
-                        <th class="text-center">Encadrant</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -37,16 +37,14 @@
                         <tr>
                             <td class="align-middle">{{ $stage->titre }}</td>
                             <td class="align-middle">{{ $stage->stagiaire->nom }} {{ $stage->stagiaire->prénom }}</td>
+                            <td class="align-middle">
+                                @foreach($stage->encadrants as $encadrant)
+                                    {{ $encadrant->nom }} {{ $encadrant->prenom }}
+                                @endforeach
+                            </td>
                             <td class="align-middle">{{ $stage->service->nom_service }}</td>
                             <td class="align-middle">{{ $stage->date_début }}</td>
                             <td class="align-middle">{{ $stage->date_fin }}</td>
-                            <td class="align-middle">
-                                    <ul class="list-unstyled">
-                                        @foreach($stage->encadrants as $encadrant)
-                                            <li>{{ $encadrant->nom }} {{ $encadrant->prenom }}</li>
-                                        @endforeach
-                                    </ul>
-                            </td>
                             <td class="align-middle">
                                 <div class="d-flex justify-content-center gap-2">
                                     <!-- Edit Button -->

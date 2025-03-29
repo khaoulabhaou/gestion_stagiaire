@@ -34,8 +34,6 @@ class StageController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-
         $request->validate([
             'titre' => 'required|string|max:255',
             'date_début' => 'required|date',
@@ -45,14 +43,17 @@ class StageController extends Controller
             'id_encadrant' => 'required|exists:encadrants,id',
         ]);
     
-        Stage::create([
+        // Create the stage
+        $stage = Stage::create([
             'titre' => $request->titre,
             'date_début' => $request->date_début,
             'date_fin' => $request->date_fin,
             'ID_service' => $request->ID_service,
             'id_stagiaire' => $request->id_stagiaire,
-            'id_encadrant' => $request->id_encadrant,
         ]);
+    
+        // Attach the encadrant using the pivot table
+        $stage->encadrants()->attach($request->id_encadrant);
     
         return redirect()->route('stages.index')->with('success', 'Stage ajouté avec succès !');
     }
@@ -65,26 +66,22 @@ class StageController extends Controller
 
     public function edit($id)
     {
-        // Fetch the stage by ID
-        $stage = Stage::findOrFail($id);
-    
-        // Fetch all services and stagiaires for the dropdowns
+        $stage = Stage::with(['encadrants', 'service', 'stagiaire'])->findOrFail($id);
         $services = Service::all();
         $stagiaires = Stagiaire::all();
-    
-        // Pass the data to the edit view
-        return view('stages.edit', compact('stage', 'services', 'stagiaires'));
+        $encadrants = Encadrant::all(); // Make sure this line exists
+        
+        return view('stages.edit', compact('stage', 'services', 'stagiaires', 'encadrants'));
     }
     public function update(Request $request, $id)
     {
-        // Validate the request data
-        $request->validate([
+        $validatedData = $request->validate([
             'titre' => 'required|string|max:255',
             'date_début' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_début',
-            'description' => 'required|string',
             'ID_service' => 'required|exists:service,ID_service',
             'id_stagiaire' => 'required|exists:stagiaire,ID_stagiaire',
+            'id_encadrant' => 'required|exists:encadrants,id'
         ]);
     
         // Find the stage by ID and update it
