@@ -20,6 +20,7 @@ class HomController extends Controller
 
         return view('stagiaires.create', compact('services', 'selectedService'));
     }
+    
 
     // ✅ Store stagiaire with unique téléphone and email
     public function store(Request $request)

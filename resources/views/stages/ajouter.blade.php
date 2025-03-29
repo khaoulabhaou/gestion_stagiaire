@@ -46,14 +46,10 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea cols="10" rows="1" name="description" id="description" class="form-control" required></textarea>
-                        </div>
+                    <div class="row mb-3"> 
                         <div class="col-md-4">
                             <label for="ID_service" class="form-label">Service</label>
-                            <select name="ID_service" id="ID_service" class="form-control" required onchange="filterStagiaires()">
+                            <select name="ID_service" id="ID_service" class="form-control" required onchange="filterOptions()">
                                 <option value="">Sélectionner un service</option>
                                 @foreach($services as $service)
                                     <option value="{{ $service->ID_service }}" {{ $selectedService == $service->ID_service ? 'selected' : '' }}>
@@ -75,6 +71,19 @@
                                 @endif
                             </select>
                         </div>
+                        <div class="col-md-4">
+                            <label for="id_encadrant" class="form-label">Encadrant</label>
+                            <select name="id_encadrant" id="id_encadrant" class="form-control" required>
+                                <option value="">Sélectionner un encadrant</option>
+                                @if(isset($encadrants))
+                                    @foreach($encadrants as $encadrant)
+                                    <option value="{{ $encadrant->id }}" data-service="{{ $encadrant->ID_service }}">
+                                        {{ $encadrant->nom }} {{ $encadrant->prenom }}
+                                    </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
                     </div>
 
                     <!-- Submit Button -->
@@ -87,35 +96,45 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Add the filterStagiaires function here -->
         <script>
-            function filterStagiaires() {
+            function filterOptions() {
                 const serviceId = document.getElementById('ID_service').value;
                 const stagiaireDropdown = document.getElementById('id_stagiaire');
+                const encadrantDropdown = document.getElementById('id_encadrant');
 
-                // Enable all options first
+                // Filter stagiaires
                 Array.from(stagiaireDropdown.options).forEach(option => {
-                    option.style.display = 'block';
+                    if (!option.value) return; // Skip the default "Select" option
+                    
+                    if (!serviceId || option.getAttribute('data-service') == serviceId) {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                        if (option.selected) option.selected = false; // Deselect if hidden
+                    }
                 });
-
-                // Hide options that don't match the selected service
-                if (serviceId) {
-                    Array.from(stagiaireDropdown.options).forEach(option => {
-                        if (option.value && option.getAttribute('data-service') !== serviceId) {
-                            option.style.display = 'none';
-                        }
-                    });
-                }
+        
+                // Filter encadrants
+                Array.from(encadrantDropdown.options).forEach(option => {
+                    if (!option.value) return; // Skip the default "Select" option
+                    
+                    if (!serviceId || option.getAttribute('data-service') == serviceId) {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                        if (option.selected) option.selected = false; // Deselect if hidden
+                    }
+                });
             }
-
-            // Call the function initially to filter stagiaires based on the selected service (if any)
-            filterStagiaires();
-
+        
+            // Call the function initially to filter options based on the selected service (if any)
+            filterOptions();
+        
             // Date Validation Function
             function validateDates() {
                 const dateDebut = document.getElementById('date_début').value;
                 const dateFin = document.getElementById('date_fin').value;
-
+        
                 if (dateDebut && dateFin && dateDebut >= dateFin) {
                     alert('La date de début doit être strictement avant la date de fin.');
                     return false; // Prevent form submission

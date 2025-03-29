@@ -20,11 +20,11 @@ class Encadrant extends Model
     public function stages()
     {
         return $this->belongsToMany(
-            Stage::class,              // Related model
-            'encadrant_stagiaire',     // Pivot table name
-            'ID_encadrants',           // Foreign key on pivot table referencing encadrants
-            'ID_stagiaire'             // Foreign key on pivot table referencing stages
+            Stage::class, 
+            'encadrant_stagiaire', 
+            'ID_encadrants', 
+            'ID_stage'
         );
-    } 
-
+    }
+    
 }

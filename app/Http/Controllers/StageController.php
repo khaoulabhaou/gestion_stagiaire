@@ -1,10 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\encadrant;
 use Illuminate\Http\Request;
 use App\Models\Stage;   // Import Stage model
-use App\Models\Stagiaire; // Import Stagiaire model
 use App\Models\Service; // Import Service model
+use App\Models\Stagiaire; // Import Stagiaire model
 
 class StageController extends Controller
 {
@@ -12,55 +13,56 @@ class StageController extends Controller
     {
         // Fetch all services
         $services = Service::all();
-
+    
         // Initialize variables
-        $selectedService = $request->input('ID_service'); // Get the selected service ID from the request
+        $selectedService = $request->input('ID_service');
         $stagiaires = [];
-
-        // If a service is selected, fetch stagiaires for that service
+        $encadrants = [];
+    
+        // If a service is selected, fetch stagiaires and encadrants for that service
         if ($selectedService) {
             $stagiaires = Stagiaire::where('ID_service', $selectedService)->get();
+            $encadrants = encadrant::where('ID_service', $selectedService)->get();
         } else {
-            // If no service is selected, fetch all stagiaires (optional)
+            // If no service is selected, fetch all (optional)
             $stagiaires = Stagiaire::all();
+            $encadrants = encadrant::all();
         }
-
-        // Pass data to the view
-        return view('stages.ajouter', compact('services', 'stagiaires', 'selectedService'));
+    
+        return view('stages.ajouter', compact('services', 'stagiaires', 'encadrants', 'selectedService'));
     }
 
     public function store(Request $request)
     {
+        // dd($request->all());
+
         $request->validate([
             'titre' => 'required|string|max:255',
             'date_début' => 'required|date',
-            'date_fin' => 'required|date|after:date_début', // Ensure date_fin is strictly after date_début
-            'description' => 'required|string',
+            'date_fin' => 'required|date|after:date_début',
             'ID_service' => 'required|exists:service,ID_service',
             'id_stagiaire' => 'required|exists:stagiaire,ID_stagiaire',
+            'id_encadrant' => 'required|exists:encadrants,id',
         ]);
     
         Stage::create([
             'titre' => $request->titre,
             'date_début' => $request->date_début,
             'date_fin' => $request->date_fin,
-            'description' => $request->description,
             'ID_service' => $request->ID_service,
             'id_stagiaire' => $request->id_stagiaire,
+            'id_encadrant' => $request->id_encadrant,
         ]);
     
         return redirect()->route('stages.index')->with('success', 'Stage ajouté avec succès !');
     }
     public function index()
     {
-        // Fetch stages with valid service and stagiaire relationships
-        $stages = Stage::whereHas('service')
-                       ->whereHas('stagiaire')
-                       ->with(['service', 'stagiaire'])
-                       ->get();
-    
+        // Eager load all necessary relationships
+        $stages = Stage::with(['encadrants', 'stagiaire', 'service'])->get();
         return view('stages.list', compact('stages'));
     }
+
     public function edit($id)
     {
         // Fetch the stage by ID

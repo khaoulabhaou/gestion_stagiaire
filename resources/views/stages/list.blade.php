@@ -11,8 +11,6 @@
             </div>
         @endif
 
-        {{-- <h2 class="mt-4 mb-4">Liste des Stages</h2> --}}
-
         <!-- Button to add a new stagiaire -->
         <div class="d-flex justify-content-end mb-3">
             <a href="{{ route('stages.create') }}" class="btn btn-success" style="margin-right: 7px">
@@ -30,7 +28,7 @@
                         <th class="text-center">Service</th>
                         <th class="text-center">Date de début</th>
                         <th class="text-center">Date de fin</th>
-                        <th class="text-center">Description</th>
+                        <th class="text-center">Encadrant</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -38,11 +36,17 @@
                     @foreach($stages as $stage)
                         <tr>
                             <td class="align-middle">{{ $stage->titre }}</td>
-                            <td class="align-middle">{{ $stage->stagiaire->nom ?? 'N/A' }} {{ $stage->stagiaire->prénom ?? '' }}</td>
-                            <td class="align-middle">{{ $stage->service->nom_service ?? 'N/A' }}</td>
+                            <td class="align-middle">{{ $stage->stagiaire->nom }} {{ $stage->stagiaire->prénom }}</td>
+                            <td class="align-middle">{{ $stage->service->nom_service }}</td>
                             <td class="align-middle">{{ $stage->date_début }}</td>
                             <td class="align-middle">{{ $stage->date_fin }}</td>
-                            <td class="align-middle">{{ $stage->description }}</td>
+                            <td class="align-middle">
+                                    <ul class="list-unstyled">
+                                        @foreach($stage->encadrants as $encadrant)
+                                            <li>{{ $encadrant->nom }} {{ $encadrant->prenom }}</li>
+                                        @endforeach
+                                    </ul>
+                            </td>
                             <td class="align-middle">
                                 <div class="d-flex justify-content-center gap-2">
                                     <!-- Edit Button -->

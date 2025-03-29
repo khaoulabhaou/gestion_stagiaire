@@ -9,7 +9,7 @@
         @if(session('error'))
             <div class="alert alert-danger">
                 {{ session('error') }}
-            </div>
+            </div>  
         @endif
 
         <div class="d-flex justify-content-between align-items-center mb-3">

@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('titre');
             $table->date('date_debut');
             $table->date('date_fin');
-            $table->text('description');
+            // $table->text('description');
+            $table->foreignId('id')->constrained('encadrants');
             $table->foreignId('ID_service')->constrained('service');
             $table->foreignId('id_stagiaire')->constrained('stagiaires');
             $table->timestamps(); // Add timestamps

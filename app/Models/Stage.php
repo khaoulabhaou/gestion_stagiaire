@@ -17,21 +17,9 @@ class Stage extends Model
         'titre',
         'date_début',
         'date_fin',
-        'description',
         'ID_service',
         'id_stagiaire',
-    ];
-
-    // For Laravel 7 and below (deprecated in later versions)
-    protected $dates = [
-        'date_début',
-        'date_fin',
-    ];
-
-    // For Laravel 8+ (recommended)
-    protected $casts = [
-        'date_début' => 'datetime:Y-m-d',
-        'date_fin' => 'datetime:Y-m-d',
+        'ID_encadrant',
     ];
 
     public function service()
@@ -41,16 +29,17 @@ class Stage extends Model
     
     public function stagiaire()
     {
-        return $this->belongsTo(Stagiaire::class, 'id_stagiaire', 'ID_stagiaire');
+        return $this->belongsTo(Stagiaire::class, 'id_stagiaire');
     }
 
     public function encadrants()
     {
         return $this->belongsToMany(
-            Encadrant::class,
-            'encadrant_stagiaire',
-            'ID_stagiaire',
+            Encadrant::class, 
+            'responsable_stages', 
+            'ID_stage', 
             'ID_encadrants'
         );
     }
+    
 }
