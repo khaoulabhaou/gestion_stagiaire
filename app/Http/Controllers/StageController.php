@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Encadrant; // Fixed capitalization
-use Illuminate\Http\Request;
 use App\Models\Stage;
 use App\Models\Service;
+use App\Models\Encadrant;
 use App\Models\Stagiaire;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class StageController extends Controller
 {
@@ -45,8 +46,10 @@ class StageController extends Controller
     public function index(Request $request)
     {
         $search = $request->query('search');
+        $currentDate = now()->toDateString();
         
         $stages = Stage::with(['encadrants', 'stagiaire', 'service'])
+            ->where('date_fin', '>=', $currentDate)
             ->when($search, function($query) use ($search) {
                 $query->where(function($q) use ($search) {
                     $q->where('titre', 'like', "%{$search}%")
@@ -67,7 +70,7 @@ class StageController extends Controller
             })
             ->orderBy('date_début', 'desc')
             ->paginate(10);
-
+    
         return view('stages.list', compact('stages'));
     }
 
@@ -113,5 +116,17 @@ class StageController extends Controller
     {
         $stagiaires = Stagiaire::where('ID_service', $serviceId)->get();
         return response()->json($stagiaires);
+    }
+    public function archive()
+    {
+        $currentDate = Carbon::now()->toDateString();
+        
+        $archivedStagiaires = Stagiaire::with(['stages.encadrants', 'service', 'etablissement'])
+            ->whereHas('stages', function($query) use ($currentDate) {
+                $query->where('date_fin', '<', $currentDate);
+            })
+            ->get();
+            
+        return view('archive', compact('archivedStagiaires'));
     }
 }
