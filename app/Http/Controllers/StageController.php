@@ -1,40 +1,33 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\encadrant;
+use App\Models\Encadrant; // Fixed capitalization
 use Illuminate\Http\Request;
-use App\Models\Stage;   // Import Stage model
-use App\Models\Service; // Import Service model
-use App\Models\Stagiaire; // Import Stagiaire model
+use App\Models\Stage;
+use App\Models\Service;
+use App\Models\Stagiaire;
 
 class StageController extends Controller
 {
     public function create(Request $request)
     {
-        // Fetch all services
         $services = Service::all();
-    
-        // Initialize variables
         $selectedService = $request->input('ID_service');
-        $stagiaires = [];
-        $encadrants = [];
-    
-        // If a service is selected, fetch stagiaires and encadrants for that service
-        if ($selectedService) {
-            $stagiaires = Stagiaire::where('ID_service', $selectedService)->get();
-            $encadrants = encadrant::where('ID_service', $selectedService)->get();
-        } else {
-            // If no service is selected, fetch all (optional)
-            $stagiaires = Stagiaire::all();
-            $encadrants = encadrant::all();
-        }
-    
+        
+        $stagiaires = $selectedService 
+            ? Stagiaire::where('ID_service', $selectedService)->get()
+            : Stagiaire::all();
+            
+        $encadrants = $selectedService
+            ? Encadrant::where('ID_service', $selectedService)->get()
+            : Encadrant::all();
+
         return view('stages.ajouter', compact('services', 'stagiaires', 'encadrants', 'selectedService'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'titre' => 'required|string|max:255',
             'date_début' => 'required|date',
             'date_fin' => 'required|date|after:date_début',
@@ -42,40 +35,56 @@ class StageController extends Controller
             'id_stagiaire' => 'required|exists:stagiaire,ID_stagiaire',
             'id_encadrant' => 'required|exists:encadrants,id',
         ]);
-    
-        // Create the stage
-        $stage = Stage::create([
-            'titre' => $request->titre,
-            'date_début' => $request->date_début,
-            'date_fin' => $request->date_fin,
-            'ID_service' => $request->ID_service,
-            'id_stagiaire' => $request->id_stagiaire,
-        ]);
-    
-        // Attach the encadrant using the pivot table
+
+        $stage = Stage::create($validated);
         $stage->encadrants()->attach($request->id_encadrant);
-    
+
         return redirect()->route('stages.index')->with('success', 'Stage ajouté avec succès !');
     }
-    public function index()
+
+    public function index(Request $request)
     {
-        // Eager load all necessary relationships
-        $stages = Stage::with(['encadrants', 'stagiaire', 'service'])->get();
+        $search = $request->query('search');
+        
+        $stages = Stage::with(['encadrants', 'stagiaire', 'service'])
+            ->when($search, function($query) use ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('titre', 'like', "%{$search}%")
+                      ->orWhere('date_début', 'like', "%{$search}%")
+                      ->orWhere('date_fin', 'like', "%{$search}%")
+                      ->orWhereHas('stagiaire', function($q) use ($search) {
+                          $q->where('nom', 'like', "%{$search}%")
+                            ->orWhere('prénom', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('service', function($q) use ($search) {
+                          $q->where('nom_service', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('encadrants', function($q) use ($search) {
+                          $q->where('nom', 'like', "%{$search}%")
+                            ->orWhere('prenom', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->orderBy('date_début', 'desc')
+            ->paginate(10);
+
         return view('stages.list', compact('stages'));
     }
 
     public function edit($id)
     {
         $stage = Stage::with(['encadrants', 'service', 'stagiaire'])->findOrFail($id);
-        $services = Service::all();
-        $stagiaires = Stagiaire::all();
-        $encadrants = Encadrant::all(); // Make sure this line exists
-        
-        return view('stages.edit', compact('stage', 'services', 'stagiaires', 'encadrants'));
+        return view('stages.edit', [
+            'stage' => $stage,
+            'services' => Service::all(),
+            'stagiaires' => Stagiaire::all(),
+            'encadrants' => Encadrant::all()
+        ]);
     }
+
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'titre' => 'required|string|max:255',
             'date_début' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_début',
@@ -83,30 +92,23 @@ class StageController extends Controller
             'id_stagiaire' => 'required|exists:stagiaire,ID_stagiaire',
             'id_encadrant' => 'required|exists:encadrants,id'
         ]);
-    
-        // Find the stage by ID and update it
+
         $stage = Stage::findOrFail($id);
-        $stage->update([
-            'titre' => $request->titre,
-            'date_début' => $request->date_début,
-            'date_fin' => $request->date_fin,
-            'description' => $request->description,
-            'ID_service' => $request->ID_service,
-            'id_stagiaire' => $request->id_stagiaire,
-        ]);
-    
-        // Redirect back with a success message
+        $stage->update($validated);
+        $stage->encadrants()->sync([$request->id_encadrant]);
+
         return redirect()->route('stages.index')->with('success', 'Stage mis à jour avec succès !');
     }
+
     public function destroy($id)
     {
-        // Find the stage by ID and delete it
         $stage = Stage::findOrFail($id);
+        $stage->encadrants()->detach();
         $stage->delete();
-    
-        // Redirect back with a success message
+
         return redirect()->route('stages.index')->with('success', 'Stage supprimé avec succès !');
     }
+
     public function getStagiairesByService($serviceId)
     {
         $stagiaires = Stagiaire::where('ID_service', $serviceId)->get();

@@ -108,8 +108,8 @@ Route::delete('/stages/{id}', [StageController::class, 'destroy'])->name('stages
 //stagiaire routes
 Route::get('/stagiaires', [HomController::class, 'create'])->name('stagiaires.create');
 Route::post('/stagiaires/store', [HomController::class, 'store'])->name('stagiaires.store');
-Route::get('/stagiaires/index', [HomController::class, 'index'])->name('index');
-Route::get('/list', [HomController::class, 'list'])->name('list');
+Route::post('/stagiaires', [HomController::class, 'index'])->name('index');
+Route::get('/list', [HomController::class, 'index'])->name('list');
 Route::get('/stagiaires/{id}/edit', [HomController::class, 'edit'])->name('stagiaires.edit');
 Route::put('/stagiaires/{id}/update', [HomController::class, 'update'])->name('stagiaires.update');
 Route::delete('/stagiaires/{id}', [HomController::class, 'destroy'])->name('stagiaires.destroy');

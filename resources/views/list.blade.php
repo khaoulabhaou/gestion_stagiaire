@@ -1,8 +1,6 @@
 <x-app-layout>   
     <body style="padding: 0" class="mt-5">
     <div class="container mt-5" style="padding: 0; margin: 0 0 0 4rem; font-size: 1rem;">
-        {{-- <h2 class="text-center mb-4" style="font-size: 2rem">Liste des Stagiaires</h2> --}}
-
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -14,14 +12,39 @@
                 {{ session('error') }}
             </div>
         @endif
-        <!-- Button to add a new stagiaire -->
-        <div class="d-flex justify-content-end mb-3">
-            <a href="{{ route('stagiaires.create') }}" class="btn btn-success" style="margin-right: 7px">
-                <i class="fa-solid fa-user-plus"></i>
-            </a>
+        
+        <!-- Search and Add Button Row -->
+        <div class="d-flex justify-content-between mb-3">
+            <!-- Search Bar -->
+            <div class="col-md-4">
+                <form action="{{ route('list') }}" method="GET">
+                    <div class="input-group">
+                        <input type="text" 
+                               name="search" 
+                               class="form-control" 
+                               placeholder="Rechercher..." 
+                               value="{{ request('search') }}">
+                        <button class="btn btn-outline-success" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        @if(request('search'))
+                            <a href="{{ route('list') }}" class="btn btn-outline-danger">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
+
+            <!-- Add Button -->
+            <div>
+                <a href="{{ route('stagiaires.create') }}" class="btn btn-success">
+                    <i class="fas fa-user-plus"></i> Ajouter Stagiaire
+                </a>
+            </div>
         </div>
 
-        <!-- Wrap the table in a scrollable container -->
+        <!-- Table -->
         <div style="overflow-x: auto;">
             <table class="table table-bordered table-hover table-sm">
                 <thead class="table-success">
@@ -34,11 +57,11 @@
                         <th class="text-center">Ville</th>
                         <th class="text-center">Service</th>
                         <th class="text-center">Spécialité</th>
-                        <th class="text-center">Option</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($stagiaires as $stagiaire)
+                    @forelse($stagiaires as $stagiaire)
                     <tr>
                         <td class="text-center align-middle">{{ $stagiaire->nom }} {{ $stagiaire->prénom }}</td>
                         <td class="text-center align-middle">{{ $stagiaire->email }}</td>
@@ -51,28 +74,33 @@
                         <td class="text-center align-middle">
                             <div style="display: flex; justify-content: center; gap: 5px;">
                                 <a href="{{ route('stagiaires.edit', $stagiaire->ID_stagiaire) }}" class="btn btn-warning btn-sm">
-                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <i class="fas fa-pen-to-square"></i>
                                 </a>        
-                                <form action="{{ route('stagiaires.destroy', $stagiaire->ID_stagiaire) }}" method="POST" onsubmit="return testDelete();">
+                                <form action="{{ route('stagiaires.destroy', $stagiaire->ID_stagiaire) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa-solid fa-trash"></i>
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center">Aucun stagiaire trouvé</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <script>
-        function testDelete() {
-            return confirm("Êtes-vous sûr de vouloir supprimer?");
-        }
-    </script>
+        <!-- Pagination -->
+        {{-- @if($stagiaires->total() > $stagiaires->perPage())
+            <div class="d-flex justify-content-center mt-3">
+                {{ $stagiaires->appends(['search' => request('search')])->links() }}
+            </div>
+        @endif --}}
+    </div>
     </body>
 </x-app-layout>

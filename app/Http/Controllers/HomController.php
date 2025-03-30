@@ -20,6 +20,35 @@ class HomController extends Controller
 
         return view('stagiaires.create', compact('services', 'selectedService'));
     }
+
+    public function index(Request $request)
+    {
+        $search = $request->query('search');
+        
+        $stagiaires = Stagiaire::with(['service', 'etablissement'])
+            ->when($search, function($query) use ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('nom', 'like', "%{$search}%")
+                      ->orWhere('prénom', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('téléphone', 'like', "%{$search}%")
+                      ->orWhere('niveau', 'like', "%{$search}%")
+                      ->orWhere('specialite', 'like', "%{$search}%")
+                      ->orWhereHas('service', function($q) use ($search) {
+                          $q->where('nom_service', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('etablissement', function($q) use ($search) {
+                          $q->where('nom_etablissement', 'like', "%{$search}%")
+                            ->orWhere('ville', 'like', "%{$search}%")
+                            ->orWhere('abréviation', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->orderBy('nom', 'asc')
+            ->paginate(10);
+
+        return view('list', compact('stagiaires'));
+    }
     
 
     // ✅ Store stagiaire with unique téléphone and email

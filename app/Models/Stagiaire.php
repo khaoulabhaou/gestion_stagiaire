@@ -45,18 +45,5 @@ class Stagiaire extends Model
     {
         return $this->hasMany(Stage::class, 'id_stagiaire', 'ID_stagiaire');
     }
-    
 
-    // Example: Archived scope (uncomment if needed)
-    // public function stages()
-    // {
-    //     return $this->hasMany(Stage::class, 'ID_stagiaire');
-    // }
-
-    // public function scopeArchived($query)
-    // {
-    //     return $query->whereHas('stages', function ($q) {
-    //         $q->where('date_fin', '<', now()); // Filter stages that have ended
-    //     });
-    // }
 }

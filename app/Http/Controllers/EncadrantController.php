@@ -9,13 +9,26 @@ use Illuminate\Support\Facades\Log;
 
 class EncadrantController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Eager load the service relationship to avoid N+1 query problem
-        $encadrants = Encadrant::with('service')->orderBy('created_at', 'DESC')->get();
+        $search = $request->query('search');
+        
+        $encadrants = Encadrant::with('service')
+            ->when($search, function($query) use ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('nom', 'like', "%{$search}%")
+                      ->orWhere('prenom', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhereHas('service', function($q) use ($search) {
+                          $q->where('nom_service', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10); // Changed from get() to paginate()
+    
         return view('encadrants.list', compact('encadrants'));
     }
-
     public function create(Request $request)
     {
         $services = Service::all();
