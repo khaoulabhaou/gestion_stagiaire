@@ -92,7 +92,7 @@ Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
 Route::post('reset-password', [NewPasswordController::class, 'store'])
 ->name('password.store');
 
-//stage routes
+//Stage routes
 Route::get('/stages/create', [StageController::class, 'create'])->name('stages.create');
 Route::post('/stages/store', [StageController::class, 'store'])->name('stages.store');
 Route::get('/ajouter', function(){
@@ -105,7 +105,7 @@ Route::put('/stages/{id}', [StageController::class, 'update'])->name('stages.upd
 Route::delete('/stages/{id}', [StageController::class, 'destroy'])->name('stages.destroy');
 
 
-//stagiaire routes
+//Stagiaire routes
 Route::get('/stagiaires', [HomController::class, 'create'])->name('stagiaires.create');
 Route::post('/stagiaires/store', [HomController::class, 'store'])->name('stagiaires.store');
 Route::post('/stagiaires', [HomController::class, 'index'])->name('index');
@@ -113,7 +113,12 @@ Route::get('/list', [HomController::class, 'index'])->name('list');
 Route::get('/stagiaires/{id}/edit', [HomController::class, 'edit'])->name('stagiaires.edit');
 Route::put('/stagiaires/{id}/update', [HomController::class, 'update'])->name('stagiaires.update');
 Route::delete('/stagiaires/{id}', [HomController::class, 'destroy'])->name('stagiaires.destroy');
+
+//Archive routes
 Route::get('/archive', [StageController::class, 'archive'])->name('archive');
+Route::get('/archives/edit/{id}', [HomController::class, 'editArchive'])->name('archives.edit');
+Route::put('/archives/update/{id}', [HomController::class, 'updateArchive'])->name('archives.update');
+Route::delete('/archives/delete/{id}', [HomController::class, 'destroyArchive'])->name('archives.destroy');
 
 // Encadrant Routes
 Route::get('/encadrants', [EncadrantController::class, 'index'])->name('encadrants.list');

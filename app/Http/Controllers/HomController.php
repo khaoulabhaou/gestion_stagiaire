@@ -202,6 +202,18 @@ class HomController extends Controller
         // Redirect back with a success message
         return redirect()->route('list')->with('success', 'Stagiaire supprimé avec succès !');
     }
+    // public function archive()
+    // {
+    //     $currentDate = Carbon::now()->toDateString();
+        
+    //     $archivedStagiaires = Stagiaire::with(['stages.encadrants', 'service', 'etablissement'])
+    //         ->whereHas('stages', function($query) use ($currentDate) {
+    //             $query->where('date_fin', '<', $currentDate);
+    //         })
+    //         ->get();
+            
+    //     return view('archive', compact('archivedStagiaires'));
+    // }
     public function archive()
     {
         $currentDate = Carbon::now()->toDateString();
@@ -213,5 +225,78 @@ class HomController extends Controller
             ->get();
             
         return view('archive', compact('archivedStagiaires'));
+    }
+
+    // Show edit form for archived stagiaire
+    public function editArchive($id)
+    {
+        $archive = Stagiaire::with(['service', 'etablissement', 'stages'])
+            ->whereHas('stages', function($query) {
+                $query->where('date_fin', '<', Carbon::now()->toDateString());
+            })
+            ->findOrFail($id);
+            
+        $services = Service::all();
+        $etablissements = Etablissement::all();
+        
+        return view('archives.edit', compact('archive', 'services', 'etablissements'));
+    }
+
+    // Update archived stagiaire
+    public function updateArchive(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
+            'prénom' => 'required|string|max:50|regex:/^[a-zA-ZÀ-ÿ\-\'\s]+$/u',
+            'email' => 'required|email|max:250|unique:stagiaire,email,' . $id . ',ID_stagiaire',
+            'téléphone' => 'required|regex:/^[0-9]{10}$/|unique:stagiaire,téléphone,' . $id . ',ID_stagiaire',
+            'ID_service' => 'required|exists:service,ID_service',
+            'ID_etablissement' => 'required|exists:etablissement,ID_etablissement',
+        ], [
+            'nom.regex' => 'Le nom ne doit contenir que des lettres et des accents.',
+            'prénom.regex' => 'Le prénom ne doit contenir que des lettres et des accents.',
+            'email.unique' => 'L\'adresse email existe déjà.',
+            'téléphone.unique' => 'Le numéro de téléphone existe déjà.',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $stagiaire = Stagiaire::findOrFail($id);
+            $stagiaire->update([
+                'nom' => $validated['nom'],
+                'prénom' => $validated['prénom'],
+                'email' => $validated['email'],
+                'téléphone' => $validated['téléphone'],
+                'ID_service' => $validated['ID_service'],
+                'ID_etablissement' => $validated['ID_etablissement'],
+            ]);
+
+            DB::commit();
+            return redirect()->route('archive')->with('success', 'Stagiaire archivé mis à jour avec succès !');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Erreur lors de la mise à jour : ' . $e->getMessage());
+        }
+    }
+
+    // Delete archived stagiaire
+    public function destroyArchive($id)
+    {
+        DB::beginTransaction();
+        try {
+            $stagiaire = Stagiaire::findOrFail($id);
+            
+            // First delete related stages
+            $stagiaire->stages()->delete();
+            
+            // Then delete the stagiaire
+            $stagiaire->delete();
+
+            DB::commit();
+            return redirect()->route('archive')->with('success', 'Stagiaire archivé supprimé avec succès !');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+        }
     }
 }

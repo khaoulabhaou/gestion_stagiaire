@@ -29,7 +29,8 @@
                             <th class="text-center">Téléphone</th>
                             <th class="text-center">Service</th>
                             <th class="text-center">Établissement</th>
-                            <th class="text-center">Date Fin Stage</th>
+                            <th class="text-center">Période de Stage</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,8 +43,25 @@
                             <td class="text-center align-middle">{{ $stagiaire->etablissement->abréviation ?? 'N/A' }}</td>
                             <td class="text-center align-middle">
                                 @foreach($stagiaire->stages as $stage)
-                                    {{ \Carbon\Carbon::parse($stage->date_fin)->format('d/m/Y') }}
+                                    {{ \Carbon\Carbon::parse($stage->date_fin)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($stage->date_début)->format('d/m/Y') }}
                                 @endforeach
+                            </td>
+                            <td class="text-center align-middle">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <!-- Modify Button -->
+                                    <a href="#" class="btn btn-warning btn-sm" title="Modifier">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    
+                                    <!-- Delete Button with Confirmation -->
+                                    <form action="#" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce stagiaire archivé?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Supprimer">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
