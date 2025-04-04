@@ -49,15 +49,15 @@
                             <td class="text-center align-middle">
                                 <div class="d-flex justify-content-center gap-2">
                                     <!-- Modify Button -->
-                                    <a href="#" class="btn btn-warning btn-sm" title="Modifier">
+                                    <a href="{{ route('archives.edit', $stagiaire->ID_stagiaire) }}" class="btn btn-warning btn-sm" title="Modifier">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                     
-                                    <!-- Delete Button with Confirmation -->
-                                    <form action="#" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce stagiaire archivé?')">
+                                    <!-- Delete Button -->
+                                    <form action="{{ route('archives.destroy', $stagiaire->ID_stagiaire) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Supprimer">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce stagiaire archivé?')">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
