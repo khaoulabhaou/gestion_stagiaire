@@ -14,11 +14,32 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="text-center mx-auto">Stagiaires Archivés : {{ $archivedStagiaires->count() }}</h2>
+        </div>
+
+        <!-- Search and Add Button Row -->
+        <div class="d-flex justify-content-between mb-3">
+            <!-- Search Bar -->
+            <div class="col-md-4">
+                <form action="{{ route('archive') }}" method="GET">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Rechercher..." 
+                               value="{{ request('search') }}">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        @if(request('search'))
+                            <a href="{{ route('archive') }}" class="btn btn-outline-danger">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
+
             <a href="{{ route('list') }}" class="btn btn-success">
                 <i class="fa-solid fa-arrow-left"></i> Retour
             </a>
         </div>
-
         @if($archivedStagiaires->count() > 0)
             <div style="overflow-x: auto;">
                 <table class="table table-bordered table-hover table-sm">
@@ -40,10 +61,13 @@
                             <td class="text-center align-middle">{{ $stagiaire->email }}</td>
                             <td class="text-center align-middle">{{ $stagiaire->téléphone }}</td>
                             <td class="text-center align-middle">{{ $stagiaire->service->nom_service ?? 'N/A' }}</td>
-                            <td class="text-center align-middle">{{ $stagiaire->etablissement->abréviation ?? 'N/A' }}</td>
+                            <td class="text-center align-middle">{{ $stagiaire->etablissement->nom_etablissement ?? 'N/A' }}</td>
                             <td class="text-center align-middle">
                                 @foreach($stagiaire->stages as $stage)
-                                    {{ \Carbon\Carbon::parse($stage->date_fin)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($stage->date_début)->format('d/m/Y') }}
+                                    <div class="stage-period">
+                                        {{ \Carbon\Carbon::parse($stage->date_début)->format('d/m/Y') }} - 
+                                        {{ \Carbon\Carbon::parse($stage->date_fin)->format('d/m/Y') }}
+                                    </div>
                                 @endforeach
                             </td>
                             <td class="text-center align-middle">

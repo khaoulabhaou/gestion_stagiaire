@@ -77,17 +77,19 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="ID_etablissement" class="form-label">Établissement</label>
-                            <select class="form-control" id="ID_etablissement" name="ID_etablissement" required>
-                                <option value="">Sélectionner un établissement</option>
-                                @foreach($etablissements as $etablissement)
-                                    <option value="{{ $etablissement->ID_etablissement }}" 
-                                        {{ old('ID_etablissement', $archive->ID_etablissement) == $etablissement->ID_etablissement ? 'selected' : '' }}>
-                                        {{ $etablissement->nom_etablissement }} ({{ $etablissement->abréviation }})
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label for="nom_etablissement" class="form-label">Établissement</label>
+                            
+                            <!-- Visible text input for editing the name -->
+                            <input type="text" class="form-control" id="nom_etablissement" 
+                                   name="nom_etablissement"
+                                   value="{{ old('nom_etablissement', $archive->etablissement->nom_etablissement ?? '') }}" 
+                                   required>
+                            
+                            <!-- Hidden input to store the actual ID -->
+                            <input type="hidden" name="ID_etablissement" 
+                                   value="{{ old('ID_etablissement', $archive->ID_etablissement) }}">
                         </div>
+                        
                     </div>
 
                     <div class="row mb-3">

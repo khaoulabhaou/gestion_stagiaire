@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class HomController extends Controller
 {
-    // ✅ Show creation page
     public function create(Request $request)
     {
         $services = Service::all();
@@ -47,11 +46,9 @@ class HomController extends Controller
             ->orderBy('nom', 'asc')
             ->paginate(10);
 
-        return view('list', compact('stagiaires'));
+        return view('list', compact('stagiaires', 'search'));
     }
-    
 
-    // ✅ Store stagiaire with unique téléphone and email
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -107,14 +104,31 @@ class HomController extends Controller
         }
     }
 
-    // ✅ List all stagiaires (Ordered by 'nom' ASC)
-    public function list()
+    public function list(Request $request)
     {
-        $stagiaires = Stagiaire::orderBy('nom', 'asc')->get();
-        return view('list', compact('stagiaires'));
+        $search = $request->query('search');
+        
+        $stagiaires = Stagiaire::with(['service', 'etablissement'])
+            ->when($search, function($query) use ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('nom', 'like', "%{$search}%")
+                      ->orWhere('prénom', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('téléphone', 'like', "%{$search}%")
+                      ->orWhereHas('service', function($q) use ($search) {
+                          $q->where('nom_service', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('etablissement', function($q) use ($search) {
+                          $q->where('nom_etablissement', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->orderBy('nom', 'asc')
+            ->paginate(10);
+
+        return view('list', compact('stagiaires', 'search'));
     }
 
-    // ✅ Show edit page
     public function edit($id)
     {
         $stagiaire = Stagiaire::where('ID_stagiaire', $id)->firstOrFail();
@@ -123,7 +137,6 @@ class HomController extends Controller
         return view('stagiaires.edit', compact('stagiaire', 'etablissements', 'services'));
     }
 
-    // ✅ Update stagiaire with unique téléphone and email
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -185,64 +198,61 @@ class HomController extends Controller
         }
     }
 
-    // ✅ Delete stagiaire (Prevent deletion if linked to a stage)
     public function destroy($id)
     {
-        // Check if the stagiaire is linked to any stage
         $isRelated = Stage::where('id_stagiaire', $id)->exists();
 
         if ($isRelated) {
             return redirect()->route('list')->with('error', 'Impossible de supprimer ce stagiaire car il est associé à un stage. Veuillez d\'abord supprimer le stage.');
         }
 
-        // Find the stagiaire by ID and delete it
         $stagiaire = Stagiaire::findOrFail($id);
         $stagiaire->delete();
 
-        // Redirect back with a success message
         return redirect()->route('list')->with('success', 'Stagiaire supprimé avec succès !');
     }
-    // public function archive()
-    // {
-    //     $currentDate = Carbon::now()->toDateString();
-        
-    //     $archivedStagiaires = Stagiaire::with(['stages.encadrants', 'service', 'etablissement'])
-    //         ->whereHas('stages', function($query) use ($currentDate) {
-    //             $query->where('date_fin', '<', $currentDate);
-    //         })
-    //         ->get();
-            
-    //     return view('archive', compact('archivedStagiaires'));
-    // }
-    public function archive()
+
+    public function archive(Request $request)
     {
+        $search = $request->query('search');
         $currentDate = Carbon::now()->toDateString();
         
         $archivedStagiaires = Stagiaire::with(['stages.encadrants', 'service', 'etablissement'])
             ->whereHas('stages', function($query) use ($currentDate) {
                 $query->where('date_fin', '<', $currentDate);
             })
-            ->get();
+            ->when($search, function($query) use ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('nom', 'like', "%{$search}%")
+                      ->orWhere('prénom', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('téléphone', 'like', "%{$search}%")
+                      ->orWhereHas('service', function($q) use ($search) {
+                          $q->where('nom_service', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('etablissement', function($q) use ($search) {
+                          $q->where('nom_etablissement', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->paginate(10);
             
-        return view('archive', compact('archivedStagiaires'));
+        return view('archive', compact('archivedStagiaires', 'search'));
     }
 
-    // Show edit form for archived stagiaire
     public function editArchive($id)
     {
-        $archive = Stagiaire::with(['service', 'etablissement', 'stages'])
+        $archive = Stagiaire::with(['service', 'stages'])
             ->whereHas('stages', function($query) {
                 $query->where('date_fin', '<', Carbon::now()->toDateString());
             })
             ->findOrFail($id);
             
         $services = Service::all();
-        $etablissements = Etablissement::all();
         
-        return view('archives.edit', compact('archive', 'services', 'etablissements'));
+        return view('archives.edit', compact('archive', 'services'));
     }
 
-    // Update archived stagiaire
     public function updateArchive(Request $request, $id)
     {
         $validated = $request->validate([
@@ -251,12 +261,14 @@ class HomController extends Controller
             'email' => 'required|email|max:250|unique:stagiaire,email,' . $id . ',ID_stagiaire',
             'téléphone' => 'required|regex:/^[0-9]{10}$/|unique:stagiaire,téléphone,' . $id . ',ID_stagiaire',
             'ID_service' => 'required|exists:service,ID_service',
+            'nom_etablissement' => 'required|string',
             'ID_etablissement' => 'required|exists:etablissement,ID_etablissement',
         ], [
             'nom.regex' => 'Le nom ne doit contenir que des lettres et des accents.',
             'prénom.regex' => 'Le prénom ne doit contenir que des lettres et des accents.',
             'email.unique' => 'L\'adresse email existe déjà.',
             'téléphone.unique' => 'Le numéro de téléphone existe déjà.',
+            'nom_etablissement.required' => 'Veuillez sélectionner un établissement valide.',
         ]);
 
         DB::beginTransaction();
@@ -270,26 +282,24 @@ class HomController extends Controller
                 'ID_service' => $validated['ID_service'],
                 'ID_etablissement' => $validated['ID_etablissement'],
             ]);
-
+    
             DB::commit();
-            return redirect()->route('archive')->with('success', 'Stagiaire archivé mis à jour avec succès !');
+            return redirect()->route('archive', ['search' => $request->query('search')])
+                           ->with('success', 'Stagiaire archivé mis à jour avec succès !');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Erreur lors de la mise à jour : ' . $e->getMessage());
         }
     }
 
-    // Delete archived stagiaire
     public function destroyArchive($id)
     {
         DB::beginTransaction();
         try {
             $stagiaire = Stagiaire::findOrFail($id);
             
-            // First delete related stages
             $stagiaire->stages()->delete();
             
-            // Then delete the stagiaire
             $stagiaire->delete();
 
             DB::commit();

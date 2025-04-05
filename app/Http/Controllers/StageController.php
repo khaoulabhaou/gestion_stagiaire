@@ -36,12 +36,20 @@ class StageController extends Controller
             'id_stagiaire' => 'required|exists:stagiaire,ID_stagiaire',
             'id_encadrant' => 'required|exists:encadrants,id',
         ]);
-
-        $stage = Stage::create($validated);
-        $stage->encadrants()->attach($request->id_encadrant);
-
+    
+        $stage = Stage::create([
+            'titre' => $validated['titre'],
+            'date_début' => $validated['date_début'],
+            'date_fin' => $validated['date_fin'],
+            'ID_service' => $validated['ID_service'],
+            'ID_stagiaire' => $validated['id_stagiaire'], // this is the fix
+        ]);
+    
+        $stage->encadrants()->attach($validated['id_encadrant']);
+    
         return redirect()->route('stages.index')->with('success', 'Stage ajouté avec succès !');
     }
+    
 
     public function index(Request $request)
     {

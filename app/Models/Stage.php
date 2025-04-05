@@ -17,29 +17,52 @@ class Stage extends Model
         'titre',
         'date_début',
         'date_fin',
+        'description',
         'ID_service',
-        'id_stagiaire',
-        'ID_encadrant',
+        'ID_stagiaire'
     ];
 
     public function service()
     {
-        return $this->belongsTo(Service::class, 'ID_service');
-    }
-    
-    public function stagiaire()
-    {
-        return $this->belongsTo(Stagiaire::class, 'id_stagiaire');
+        return $this->belongsTo(Service::class, 'ID_service', 'ID_service');
     }
 
-    public function encadrants()
+    public function stagiaire()
+    {
+        return $this->belongsTo(Stagiaire::class, 'ID_stagiaire', 'ID_stagiaire');
+    }
+
+    public function responsables()
     {
         return $this->belongsToMany(
-            Encadrant::class, 
+            Encadrant::class,
             'responsable_stages', 
-            'ID_stage', 
-            'ID_encadrants',
+            'ID_stage',
+            'ID_encadrants'
         );
     }
-    
+    public function encadrants()
+    {
+
+        return $this->responsables();
+
+        return $this->supervisingEncadrants();
+    }
+
+    public function supervisingEncadrants()
+    {
+        return $this->belongsToMany(
+            Encadrant::class,
+            'encadrant_stagiaire',
+            'ID_stage',
+            'ID_encadrants'
+        )->withPivot('ID_stagiaire');
+    }
+
+    public function allEncadrants()
+    {
+        $responsables = $this->responsables;
+        $supervisors = $this->supervisingEncadrants;
+        return $responsables->merge($supervisors)->unique('id');
+    }
 }

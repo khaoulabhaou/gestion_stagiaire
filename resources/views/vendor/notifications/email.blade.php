@@ -2,7 +2,7 @@
 
 {{-- Custom Logo --}}
 {{-- <x-mail::panel>
-    <img src="https://i.postimg.cc/TwQ8RCyY/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview-removebg-preview.png" alt="AULSH Logo" style="max-width: 200px; margin-bottom: 20px;">
+    <img src="https://i.ibb.co/qHFwmv8/Whats-App-Image-2025-04-02-at-13-01-08-fb041c0e-removebg-preview.png" alt="AULSH Logo" style="max-width: 200px; margin-bottom: 20px;">
 </x-mail::panel> --}}
 
 {{-- Greeting --}}
