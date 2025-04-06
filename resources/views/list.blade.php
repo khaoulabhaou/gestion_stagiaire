@@ -101,8 +101,8 @@
 
         <!-- Pagination -->
         @if($stagiaires->total() > $stagiaires->perPage())
-            <div class="d-flex justify-content-center mt-3">
-                {{ $stagiaires->appends(['search' => request('search')])->links() }}
+            <div class="mt-3">
+                {{ $stagiaires->appends(['search' => request('search')])->links('vendor.pagination.bootstrap-5') }}
             </div>
         @endif
     </div>

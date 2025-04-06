@@ -101,5 +101,12 @@
                 Aucun stagiaire archivé trouvé
             </div>
         @endif
+                    <!-- Pagination -->
+                    @if($archivedStagiaires->total() > $archivedStagiaires->perPage())
+                    <div class="mt-3">
+                        {{ $archivedStagiaires->appends(['search' => request('search')])->links('vendor.pagination.bootstrap-5') }}
+                    </div>
+                    @endif
     </div>
+
 </x-app-layout>

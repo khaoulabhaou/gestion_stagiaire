@@ -99,10 +99,10 @@
         </div>
 
         <!-- Pagination -->
-        @if($stages->hasPages())
-            <div class="d-flex justify-content-center mt-3">
-                {{ $stages->appends(request()->query())->links() }}
-            </div>
+        @if($stages->total() > $stages->perPage())
+        <div class="mt-3">
+            {{ $stages->appends(['search' => request('search')])->links('vendor.pagination.bootstrap-5') }}
+        </div>
         @endif
     </div>
 </x-app-layout>

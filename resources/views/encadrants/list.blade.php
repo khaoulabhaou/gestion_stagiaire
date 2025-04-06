@@ -90,10 +90,10 @@
         </div>
 
         <!-- Pagination -->
-        @if($encadrants->hasPages())
-            <div class="d-flex justify-content-center mt-3">
-                {{ $encadrants->appends(['search' => request('search')])->links() }}
-            </div>
+        @if($encadrants->total() > $encadrants->perPage())
+        <div class="mt-3">
+            {{ $encadrants->appends(['search' => request('search')])->links('vendor.pagination.bootstrap-5') }}
+        </div>
         @endif
     </div>
 </x-app-layout>
