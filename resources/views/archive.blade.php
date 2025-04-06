@@ -22,9 +22,12 @@
             <div class="col-md-4">
                 <form action="{{ route('archive') }}" method="GET">
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Rechercher..." 
+                        <input type="text" 
+                               name="search" 
+                               class="form-control" 
+                               placeholder="Rechercher..." 
                                value="{{ request('search') }}">
-                        <button class="btn btn-outline-secondary" type="submit">
+                        <button class="btn btn-outline-success" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
                         @if(request('search'))
@@ -35,7 +38,7 @@
                     </div>
                 </form>
             </div>
-
+            
             <a href="{{ route('list') }}" class="btn btn-success">
                 <i class="fa-solid fa-arrow-left"></i> Retour
             </a>
@@ -73,18 +76,19 @@
                             <td class="text-center align-middle">
                                 <div class="d-flex justify-content-center gap-2">
                                     <!-- Modify Button -->
-                                    <a href="{{ route('archives.edit', $stagiaire->ID_stagiaire) }}" class="btn btn-warning btn-sm" title="Modifier">
-                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    <a href="{{ route('archives.edit', $stagiaire->ID_stagiaire) }}" title="Modifier">
+                                        {{-- <i class="fa-solid fa-pen-to-square"></i> --}}
+                                        <style>
+                                            .text-success.nav-link{
+                                                text-decoration: none;
+                                            }
+                                            .text-success.nav-link:hover{
+                                                text-decoration: underline;
+                                            }
+                                        </style>
+                                        <p class="text-success nav-link">Modifier</p>
                                     </a>
                                     
-                                    <!-- Delete Button -->
-                                    <form action="{{ route('archives.destroy', $stagiaire->ID_stagiaire) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce stagiaire archivé?')">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>

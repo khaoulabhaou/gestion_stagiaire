@@ -215,31 +215,40 @@ class HomController extends Controller
     public function archive(Request $request)
     {
         $search = $request->query('search');
-        $currentDate = Carbon::now()->toDateString();
+        $currentDate = now()->format('Y-m-d');
         
-        $archivedStagiaires = Stagiaire::with(['stages.encadrants', 'service', 'etablissement'])
-            ->whereHas('stages', function($query) use ($currentDate) {
-                $query->where('date_fin', '<', $currentDate);
+        $query = Stagiaire::with(['service', 'etablissement'])
+            ->whereHas('stages', function($q) use ($currentDate) {
+                $q->where('date_fin', '<', $currentDate);
             })
-            ->when($search, function($query) use ($search) {
-                $query->where(function($q) use ($search) {
-                    $q->where('nom', 'like', "%{$search}%")
-                      ->orWhere('prénom', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%")
-                      ->orWhere('téléphone', 'like', "%{$search}%")
-                      ->orWhereHas('service', function($q) use ($search) {
-                          $q->where('nom_service', 'like', "%{$search}%");
-                      })
-                      ->orWhereHas('etablissement', function($q) use ($search) {
-                          $q->where('nom_etablissement', 'like', "%{$search}%");
-                      });
-                });
-            })
-            ->paginate(10);
-            
+            ->with(['stages' => function($q) use ($currentDate) {
+                $q->where('date_fin', '<', $currentDate)
+                  ->orderBy('date_fin', 'desc');
+            }]);
+    
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('prénom', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('téléphone', 'like', "%{$search}%")
+                  ->orWhere('niveau', 'like', "%{$search}%")
+                  ->orWhere('specialite', 'like', "%{$search}%")
+                  ->orWhereHas('service', function($q) use ($search) {
+                      $q->where('nom_service', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('etablissement', function($q) use ($search) {
+                      $q->where('nom_etablissement', 'like', "%{$search}%")
+                        ->orWhere('ville', 'like', "%{$search}%")
+                        ->orWhere('abréviation', 'like', "%{$search}%");
+                  });
+            });
+        }
+    
+        $archivedStagiaires = $query->orderBy('nom')->paginate(10);
+        
         return view('archive', compact('archivedStagiaires', 'search'));
     }
-
     public function editArchive($id)
     {
         $archive = Stagiaire::with(['service', 'stages'])

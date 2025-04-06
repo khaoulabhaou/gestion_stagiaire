@@ -115,7 +115,7 @@ Route::put('/stagiaires/{id}/update', [HomController::class, 'update'])->name('s
 Route::delete('/stagiaires/{id}', [HomController::class, 'destroy'])->name('stagiaires.destroy');
 
 //Archive routes
-Route::get('/archive', [StageController::class, 'archive'])->name('archive');
+Route::get('/archive', [HomController::class, 'archive'])->name('archive');
 Route::get('/archives/edit/{id}', [HomController::class, 'editArchive'])->name('archives.edit');
 Route::put('/archives/update/{id}', [HomController::class, 'updateArchive'])->name('archives.update');
 Route::delete('/archives/delete/{id}', [HomController::class, 'destroyArchive'])->name('archives.destroy');

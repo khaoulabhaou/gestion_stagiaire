@@ -12,7 +12,11 @@
                 {{ session('error') }}
             </div>
         @endif
-        
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <p class="text-center mx-auto mb-0 mt-2" style="font-weight:300">Stagiaires dans stage : {{ $stagiaires->total() }}</p>
+        </div>
+
         <!-- Search and Add Button Row -->
         <div class="d-flex justify-content-between mb-3">
             <!-- Search Bar -->
@@ -96,11 +100,11 @@
         </div>
 
         <!-- Pagination -->
-        {{-- @if($stagiaires->total() > $stagiaires->perPage())
+        @if($stagiaires->total() > $stagiaires->perPage())
             <div class="d-flex justify-content-center mt-3">
                 {{ $stagiaires->appends(['search' => request('search')])->links() }}
             </div>
-        @endif --}}
+        @endif
     </div>
     </body>
 </x-app-layout>

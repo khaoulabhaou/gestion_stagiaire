@@ -12,6 +12,10 @@
             </div>
         @endif
 
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <p class="text-center mx-auto mb-0 mt-2" style="font-weight:300">Stages en cours : {{ $stages->total() }}</p>
+        </div>
+
         <!-- Search and Add Button Row -->
         <div class="d-flex justify-content-between mb-3">
             <!-- Search Bar -->
