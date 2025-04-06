@@ -13,7 +13,7 @@
         @endif
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="text-center mx-auto">Stagiaires Archivés : {{ $archivedStagiaires->count() }}</h2>
+            <p class="text-center mx-auto">Stagiaires Archivés : {{ $archivedStagiaires->total() }}</p>
         </div>
 
         <!-- Search and Add Button Row -->
