@@ -45,7 +45,7 @@
         <div>
             <div class="nav_list">
                 <p class="nav_link flex" style="padding: 0;margin-bottom:3rem">
-                    <img width="30%" style="margin: 9.5% 0 0 3.9%;padding:0" src="https://i.ibb.co/qHFwmv8/Whats-App-Image-2025-04-02-at-13-01-08-fb041c0e-removebg-preview.png" alt="" srcset="">
+                    <img width="30%" style="margin: 9.5% 0 0 3.9%;padding:0" src="https://myimgs.org/storage/images/3684/WhatsApp_Image_2025-02-11_at_10.png" alt="" srcset="">
                     <span style="font-size: 16px;margin-top:10%">l'Agence Urbain de Lâayoune</span>
                 </p>
                 

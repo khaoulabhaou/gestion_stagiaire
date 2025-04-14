@@ -43,7 +43,7 @@
 
 <div class="login-container">
     <div class="logo">
-        <img style="width: 25%" src="https://i.ibb.co/qHFwmv8/Whats-App-Image-2025-04-02-at-13-01-08-fb041c0e-removebg-preview.png" alt="Logo" />
+        <img style="width: 25%" src="https://myimgs.org/storage/images/3684/WhatsApp_Image_2025-02-11_at_10.png" alt="Logo" />
     </div>
 
     <!-- Displaying general login errors in Bootstrap alert -->
