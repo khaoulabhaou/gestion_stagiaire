@@ -37,7 +37,7 @@
 
     <div class="login-container">
         <div class="logo">
-            <img style="width: 25%" src='https://myimgs.org/storage/images/3684/WhatsApp_Image_2025-02-11_at_10.png' alt='Logo'/>
+            <img style="width: 25%" src='https://i.postimg.cc/L4Lp4JqL/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview.png' alt='Logo'/>
         </div>
         <form method="POST" action="{{ route('register') }}">
             @csrf

@@ -21,7 +21,7 @@
                 <div class="flex justify-center mb-6"> <!-- Added margin-bottom (mb-6) for spacing -->
                     <a class="block">
                         <img 
-                            src="https://myimgs.org/storage/images/3684/WhatsApp_Image_2025-02-11_at_10.png" 
+                            src="https://i.postimg.cc/L4Lp4JqL/Whats-App-Image-2025-02-11-at-10-38-33-526755f1-1-Copy-removebg-preview.png" 
                             class="h-16 w-auto" Increased size to h-16 (4rem)
                             alt="Logo"
                         />
